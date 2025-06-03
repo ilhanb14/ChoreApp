@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('family_id');
             $table->foreign('family_id')->references('id')->on('families');
             $table->enum('claim_type', array_column(ClaimType::cases(), 'value'));
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->enum('role', array_column(FamilyRole::cases(), 'value'))->default(FamilyRole::Child->value);
             $table->bigInteger('points');
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

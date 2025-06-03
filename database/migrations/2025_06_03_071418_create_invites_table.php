@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('invited_id')->references('id')->on('users');
             $table->bigInteger('family_id');
             $table->enum('status', array_column(InviteStatus::cases(), 'value'))->default(InviteStatus::Pending->value);
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();

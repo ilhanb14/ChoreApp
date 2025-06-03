@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('comment')->nullable();
             $table->boolean('self_assigned');
             $table->boolean('confirmed')->default(0);
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
