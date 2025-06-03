@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 
 use App\Livewire\CreateChore;
 
-use App\Livewire\CreateChore;
 
 Route::get('/', function () {
     return view('welcome');
