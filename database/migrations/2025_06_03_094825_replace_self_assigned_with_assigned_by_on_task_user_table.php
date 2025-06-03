@@ -25,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('task_user', function (Blueprint $table) {
             $table->boolean('self_assigned');
+            $table->dropForeign(['assigned_by']);
             $table->dropColumn('assigned_by');
         });
     }
