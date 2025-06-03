@@ -8,4 +8,51 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-tangelo-100: rgb(53, 14, 2);
+    --color-tangelo-200: rgb(106, 28, 4);
+    --color-tangelo-300: rgb(159, 42, 7);
+    --color-tangelo-400: rgb(212, 56, 9);
+    --color-tangelo-500: rgb(246, 81, 29);
+    --color-tangelo-600: rgb(247, 115, 75);
+    --color-tangelo-700: rgb(249, 150, 120);
+    --color-tangelo-800: rgb(251, 185, 165);
+    --color-tangelo-900: rgb(253, 220, 210);
+    --color-tangelo: rgb(246, 81, 29);
+
+
+    --color-selective-yellow-100: rgb(51, 36, 0);
+    --color-selective-yellow-200: rgb(102, 71, 0);
+    --color-selective-yellow-300: rgb(153, 107, 0);
+    --color-selective-yellow-400: rgb(204, 143, 0);
+    --color-selective-yellow-500: rgb(255, 180, 0);
+    --color-selective-yellow-600: rgb(255, 194, 51);
+    --color-selective-yellow-700: rgb(255, 209, 102);
+    --color-selective-yellow-800: rgb(255, 224, 153);
+    --color-selective-yellow-900: rgb(255, 240, 204);
+    --color-selective-yellow: rgb(255, 180, 0);
+
+
+    --color-picton-blue-100: rgb(0, 33, 47);
+    --color-picton-blue-200: rgb(0, 66, 94);
+    --color-picton-blue-300: rgb(0, 99, 141);
+    --color-picton-blue-400: rgb(0, 131, 188);
+    --color-picton-blue-500: rgb(0, 166, 237);
+    --color-picton-blue-600: rgb(35, 189, 255);
+    --color-picton-blue-700: rgb(90, 205, 255);
+    --color-picton-blue-800: rgb(145, 222, 255);
+    --color-picton-blue-900: rgb(200, 238, 255);
+    --color-picton-blue: rgb(0, 166, 237);
+
+    --color-apple-green-100: rgb(25, 37, 0);
+    --color-apple-green-200: rgb(50, 73, 0);
+    --color-apple-green-300: rgb(75, 110, 0);
+    --color-apple-green-400: rgb(100, 147, 0);
+    --color-apple-green-500: rgb(127, 184, 0);
+    --color-apple-green-600: rgb(170, 249, 0);
+    --color-apple-green-700: rgb(193, 255, 59);
+    --color-apple-green-800: rgb(214, 255, 124);
+    --color-apple-green-900: rgb(234, 255, 190);
+    --color-apple-green: rgb(127, 184, 0);
+    
 }
