@@ -4,8 +4,8 @@
     </a>
 
     @auth
-        <a href="{{ url('/chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Chores
+        <a href="{{ url('/create-chore') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Make Chore
         </a>
 
         <form method="POST" action="{{ route('logout') }}">
