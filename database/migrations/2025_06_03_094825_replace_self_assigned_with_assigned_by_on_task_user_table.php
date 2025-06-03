@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('task_user', function (Blueprint $table) {
-            $table->boolean('self_assigned');
+            $table->boolean('self_assigned')->default(false);
             $table->dropForeign(['assigned_by']);
             $table->dropColumn('assigned_by');
         });

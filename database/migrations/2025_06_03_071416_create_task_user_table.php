@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('task_id')->references('id')->on('tasks');
             $table->dateTime('performed')->nullable();
             $table->string('comment')->nullable();
-            $table->boolean('self_assigned');
+            $table->boolean('self_assigned')->default(false);
             $table->boolean('confirmed')->default(0);
             $table->timestamps();
         });
