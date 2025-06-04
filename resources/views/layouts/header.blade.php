@@ -14,7 +14,7 @@
     @livewireStyles
 </head>
 
-<body class="min-h-screen bg-gray-100">
+<body class="min-h-screen bg-linear-135 from-apple-green-800 to-tangelo-900">
 
 <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
     <div class="flex items-center justify-between px-4 py-3">
@@ -28,4 +28,4 @@
     </div>
 </header>
 
-<main class="pt-14">
+<main class="pt-14 ">
