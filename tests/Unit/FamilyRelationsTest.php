@@ -50,15 +50,18 @@ class FamilyRelationsTest extends TestCase
         ]);
 
         $user->families()->attach([
-            $family1->id => ['role' => 'adult', 'points' => 0],
+            $family1->id => ['role' => 'adult', 'points' => 25],
             $family2->id => ['role' => 'adult', 'points' => 0],
         ]);
 
         // Assert user has 2 families
-        // $this->assertCount(2, $user->families);
+        $this->assertCount(2, $user->families);
 
         // Assert user has both families
         $this->assertTrue($user->families->contains($family1));
         $this->assertTrue($user->families->contains($family2));
+
+        // Assert pivot has points
+        $this->assertEquals($user->families->first()->pivot->points, 25);
     }
 }

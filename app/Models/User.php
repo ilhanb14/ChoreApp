@@ -48,6 +48,7 @@ class User extends Authenticatable
 
     public function families()
     {
-        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id');
+        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
+                ->withPivot(['role', 'points']);
     }
 }
