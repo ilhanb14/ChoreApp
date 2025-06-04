@@ -17,4 +17,8 @@ class Reward extends Model
     public function family() {
         return $this->belongsTo(Family::class);
     }
+
+    public function usersClaimed() {
+        return $this->belongsToMany(User::class, 'reward_user', 'reward_id', 'user_id');
+    }
 }
