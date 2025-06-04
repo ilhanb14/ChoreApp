@@ -1,0 +1,5 @@
+    </main>
+
+    @livewireScripts
+</body>
+</html>
