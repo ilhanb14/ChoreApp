@@ -1,3 +1,7 @@
+@php
+    use App\Enums\ClaimType;
+@endphp
+
 @include('layouts.header')
 <div class='px-14 pt-6'>
     <div class='flex justify-between w-full'>
@@ -12,8 +16,22 @@
             <p class="text-apple-green mb-4">
                 {{ ucwords(str_replace('_', ' ', $reward->claim_type)) }} {{--  --}}
             </p>
-            <button class="bg-selective-yellow hover:bg-selective-yellow-600 text-white font-semibold py-2 px-4 rounded-lg border border-selective-yellow-400">
-                Claim
+            <button
+                @if (!$reward->available) disabled @endif
+                class="
+                    {{ $reward->available && $reward->points <= $points
+                        ? 'bg-selective-yellow hover:bg-selective-yellow-600 text-white border-selective-yellow-400'
+                        : 'bg-gray-300 text-gray-500 border-gray-400 cursor-not-allowed'
+                    }}
+                    font-semibold py-2 px-4 rounded-lg border
+            ">
+                @if(!$reward->available)
+                    Claimed
+                @elseif($reward->points > $points)
+                    Can't afford
+                @else
+                    Claim
+                @endif
             </button>
         </div>
     @endforeach
@@ -24,7 +42,7 @@
     @foreach ($families as $family)
         <a 
             href="{{ $family->id === $activeFamily->id ? '#' : route('rewards', ['family_id' => $family->id]) }}"
-            class="inline-block px-4 py-2 rounded-lg text-white font-semibold 
+            class="inline-block px-4 py-2 rounded-lg text-white font-semibold shadow-lg 
                 {{ $family->id === $activeFamily->id 
                     ? 'bg-gray-400 cursor-not-allowed pointer-events-none' 
                     : 'bg-apple-green hover:bg-apple-green-400 border-lg boder-apple-green-300' }}"

@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Reward;
 use App\Models\Family;
 use App\Models\User;
+use App\Enums\ClaimType;
 
 class RewardsController extends Controller
 {
     public function getRewardsView(Request $request) {
         // Temp hardcoded user
-        $user = User::find(3);
+        $user = User::find(5);
 
         // Use family id in request or default to user's first family
         $familyId = $request->query('family_id') ?? $user->families->first()?->id;
@@ -27,6 +28,15 @@ class RewardsController extends Controller
         
         $activeFamily = Family::find($familyId);
         $rewards = $activeFamily->rewards;
+
+        foreach($rewards as $reward) {
+            $claimType = ClaimType::from($reward->claim_type);
+            if (in_array($claimType, [ ClaimType::Single, ClaimType::PerUser ]) && $reward->usersClaimed->contains($user)) {
+                $reward->available = false;
+            } else {
+                $reward->available = true;
+            }
+        }
 
         return view('rewards', [
             'rewards' => $rewards,
