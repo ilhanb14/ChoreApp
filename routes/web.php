@@ -17,3 +17,5 @@ Route::get('/create-chore', CreateChore::class)
 
 Route::get('/rewards', [RewardsController::class, 'getRewardsView'])
     ->name('rewards');
+Route::post('/claim-reward', [RewardsController::class, 'claimReward'])
+    ->name('claim-reward');

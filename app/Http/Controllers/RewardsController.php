@@ -29,13 +29,9 @@ class RewardsController extends Controller
         $activeFamily = Family::find($familyId);
         $rewards = $activeFamily->rewards;
 
+        // Add availability to disable claim button 
         foreach($rewards as $reward) {
-            $claimType = ClaimType::from($reward->claim_type);
-            if (in_array($claimType, [ ClaimType::Single, ClaimType::PerUser ]) && $reward->usersClaimed->contains($user)) {
-                $reward->available = false;
-            } else {
-                $reward->available = true;
-            }
+            $reward->available = $this::rewardAvailable($reward, $user);
         }
 
         return view('rewards', [
@@ -46,5 +42,52 @@ class RewardsController extends Controller
             'points' => $points,
             'familyRole' => $role,
         ]);
+    }
+
+    public function claimReward(Request $request) {
+        $validated = $request->validate([
+        'reward_id' => ['required', 'exists:rewards,id'],
+        'user_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $user = User::find($validated['user_id']);
+        $reward = Reward::find($validated['reward_id']);
+
+        // Check that user is in the family this reward is on
+        if (!$user->families->contains(Family::find($reward->family_id))) {
+            return back()->withErrors(['reward' => 'User not in family']);
+        }
+        // Check availability
+        if(!$this::rewardAvailable($reward, $user)) {
+            return back()->withErrors(['reward' => 'Reward already claimed']);
+        }
+
+        // Get poinst from family pivot
+        $family = $user->families()->where('family_id', $reward->family_id)->first();
+        $points = $family->pivot->points;
+
+        if($reward->points > $points) {
+            return back()->withErrors(['reward' => 'Can\'t afford']);
+        }
+
+        // Can be claimed
+        // Add to pivot table that this user has claimed this reward
+        $reward->usersClaimed()->attach($user->id);
+
+        // Take points from user (points are per family so they must be updated in the pivot table)
+        $user->families()->updateExistingPivot($family->id, [
+            'points' => $points - $reward->points,
+        ]);
+
+        return redirect()->back()->with('success', 'Reward successfully claimed!');
+    }
+
+    /**
+     * Check that a reward can be claimed by a user
+     * (Unavailable if it's a one-time reward that has been claimed)
+     */
+    private function rewardAvailable(Reward $reward, User $user) {
+        $claimType = ClaimType::from($reward->claim_type);
+        return !(in_array($claimType, [ ClaimType::Single, ClaimType::PerUser ]) && $reward->usersClaimed->contains($user));
     }
 }
