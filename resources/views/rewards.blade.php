@@ -1,5 +1,6 @@
 @php
     use App\Enums\ClaimType;
+    use App\Enums\FamilyRole;
 @endphp
 
 @include('layouts.header')
@@ -63,4 +64,11 @@
     </a>
     @endforeach
     @endif
+
+    @if ($familyRole == FamilyRole::Adult->value)
+    <h1 class='text-xl font-bold mb-2 text-selective-yellow'> Add New Reward </h1>
+    @livewire('create-reward')
+    @endif
 </div>
+
+@include('layouts.footer')
