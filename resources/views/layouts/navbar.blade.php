@@ -9,7 +9,7 @@
         </a>
 
         <a href="{{ url('/rewards') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Make Chore
+            Rewards
         </a>
 
         <form method="POST" action="{{ route('logout') }}">
