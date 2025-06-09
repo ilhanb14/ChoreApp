@@ -12,7 +12,7 @@ class RewardsController extends Controller
 {
     public function getRewardsView(Request $request) {
         // Temp hardcoded user
-        $user = User::find(5);
+        $user = auth()->user();
 
         // Use family id in request or default to user's first family
         $familyId = $request->query('family_id') ?? $user->families->first()?->id;
