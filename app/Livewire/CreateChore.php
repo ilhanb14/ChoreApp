@@ -11,7 +11,7 @@ class CreateChore extends Component
     public $points = 0;
     public $due_date = null;
     public $assigned_to = null;
-    public $frequency = ''; // Default frequency
+    public $frequency = '';
 
     public function save()
     {
