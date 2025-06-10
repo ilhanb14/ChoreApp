@@ -13,11 +13,11 @@
     
     @livewireStyles
 </head>
-<body class="min-h-screen bg-gray-100">
+<body class="h-screen bg-linear-65 from-apple-green-800 to-tangelo-900 bg-fixed">
 
     @include('layouts.header')
 
-    <main class="pt-14">
+    <main class="pt-24">
         {{ $slot }}
     </main>
 

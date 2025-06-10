@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center p-4 bg-linear-135 from-apple-green-800 to-tangelo-900">
+<div class="h-full flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold mb-2 text-tangelo">
