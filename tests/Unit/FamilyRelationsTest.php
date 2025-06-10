@@ -11,7 +11,7 @@ class FamilyRelationsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_family_hasmany(): void
+    public function test_family_members(): void
     {
         // Create test family
         $family = Family::create([
@@ -34,5 +34,34 @@ class FamilyRelationsTest extends TestCase
         // Assert each user in members
         $this->assertTrue($family->members->contains($adult));
         $this->assertTrue($family->members->contains($child));
+    }
+
+    public function test_user_families(): void
+    {
+        // Test user
+        $user = User::factory()->create();
+
+        // Create test families
+        $family1 = Family::create([
+            'name' => 'Test Family',
+        ]);
+        $family2 = Family::create([
+            'name' => 'Test Family',
+        ]);
+
+        $user->families()->attach([
+            $family1->id => ['role' => 'adult', 'points' => 25],
+            $family2->id => ['role' => 'adult', 'points' => 0],
+        ]);
+
+        // Assert user has 2 families
+        $this->assertCount(2, $user->families);
+
+        // Assert user has both families
+        $this->assertTrue($user->families->contains($family1));
+        $this->assertTrue($user->families->contains($family2));
+
+        // Assert pivot has points
+        $this->assertEquals($user->families->first()->pivot->points, 25);
     }
 }

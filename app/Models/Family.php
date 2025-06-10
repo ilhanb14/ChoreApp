@@ -10,6 +10,12 @@ class Family extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'family_user', 'family_id', 'user_id');
+        return $this->belongsToMany(User::class, 'family_user', 'family_id', 'user_id')
+                ->withPivot(['role', 'points']);
+    }
+
+    public function rewards()
+    {
+        return $this->hasMany(Reward::class);
     }
 }

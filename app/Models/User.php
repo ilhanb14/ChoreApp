@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function families()
+    {
+        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
+                ->withPivot(['role', 'points']);
+    }
 }
