@@ -57,15 +57,22 @@
             @error('points') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        <div class="mb-4">
-            <label class="block">frequency</label>
-            <select wire:model="frequency" class="w-full border-2 border-gray-200 rounded-xl p-2">
-                <option value="">Select Frequency</option>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
-        </div>
+<div x-data="{ showFrequency: @entangle('isRecurring') }">
+    <label class="flex items-center mb-2">
+        <input type="checkbox" x-model="showFrequency" wire:model="isRecurring" class="mr-2">
+        Is Recurring?
+    </label>
+
+    <div class="mb-4" x-show="showFrequency" x-transition>
+        <label class="block">Frequency</label>
+        <select wire:model="frequency" class="w-full border-2 border-gray-200 rounded-xl p-2">
+            <option value="">Select Frequency</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+    </div>
+</div>
     
 
         <div class="mb-4">

@@ -42,7 +42,7 @@
         <div>
             <label class="block  text-sm font-semibold">Frequency</label>
             <select type="text" wire:model="frequency" class="w-full border-2 border-gray-200 rounded-xl p-2">
-                <option value="">Select Frequency</option>
+                <option value="">Once</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
