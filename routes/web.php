@@ -6,6 +6,7 @@ use App\Livewire\CreateChore;
 use App\Http\Controllers\RewardsController;
 use App\Livewire\ChoreList;
 use App\Livewire\EditChore;
+use App\Livewire\UserChores;
 
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\InviteController;
@@ -22,6 +23,8 @@ Route::get('/chores', ChoreList::class)
     ->name('chores');    
 Route::get('/chores/edit/{chore}', EditChore::class)
     ->name('edit-chore');
+Route::get('/my-chores', UserChores::class)
+    ->name('user-chores');
 
 // Route::middleware(['auth'])->group(function () {
     // Family routes
