@@ -95,6 +95,7 @@ class RewardsController extends Controller
             return back()->withErrors(['reward', 'Unable to remove reward']);
         }
 
+        $reward->usersClaimed()->detach();
         $reward->delete();
 
         return redirect()->back()->with('success', 'Reward removed');
