@@ -9,6 +9,23 @@
         <h1 class='text-3xl font-bold mb-2 text-selective-yellow'> {{ $activeFamily->name }} Reward Shop </h1>
         <h3 class='text-xl font-semibold text-selective-yellow'> Points: {{ $points }}
     </div>
+
+    @if(count($families) > 1)
+    <h3 class="text-xl font-bold mb-2 text-selective-yellow"> Switch family </h1>
+    @foreach ($families as $family)
+        <a 
+            href="{{ $family->id === $activeFamily->id ? '#' : route('rewards', ['family_id' => $family->id]) }}"
+            class="inline-block px-4 py-2 rounded-lg text-white font-semibold shadow-lg mb-2
+                {{ $family->id === $activeFamily->id 
+                    ? 'bg-apple-green-400 cursor-not-allowed pointer-events-none' 
+                    : 'bg-selective-yellow hover:bg-selective-yellow-600' }}"
+            {{ $family->id === $activeFamily->id ? 'aria-disabled=true' : '' }}
+        >
+    {{ $family->name }}
+    </a>
+    @endforeach
+    @endif
+    
     @if (session('success'))
         <div class="bg-apple-green border border-apple-green-400 text-apple-green-700 px-4 py-3 rounded mb-4 max-w-80">
             {{ session('success') }}
@@ -65,22 +82,6 @@
         </div>
     @endforeach
     </div>
-
-    @if(count($families) > 1)
-    <h3 class="text-xl font-bold mb-2 text-selective-yellow"> Switch family </h1>
-    @foreach ($families as $family)
-        <a 
-            href="{{ $family->id === $activeFamily->id ? '#' : route('rewards', ['family_id' => $family->id]) }}"
-            class="inline-block px-4 py-2 rounded-lg text-white font-semibold shadow-lg 
-                {{ $family->id === $activeFamily->id 
-                    ? 'bg-gray-400 cursor-not-allowed pointer-events-none' 
-                    : 'bg-apple-green hover:bg-apple-green-400 border-lg boder-apple-green-300' }}"
-            {{ $family->id === $activeFamily->id ? 'aria-disabled=true' : '' }}
-        >
-    {{ $family->name }}
-    </a>
-    @endforeach
-    @endif
 
     @if ($familyRole == FamilyRole::Adult->value)
     <h1 class='text-xl font-bold mb-2 text-selective-yellow'> Add New Reward </h1>
