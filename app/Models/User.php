@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Family;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -65,5 +67,11 @@ class User extends Authenticatable
             ->where('family_id', $family->id)
             ->wherePivot('role', 'parent')
             ->exists();
+    }
+
+    // Only verified users on our domain can access filament
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@chorebusters.be') && $this->hasVerifiedEmail();
     }
 }
