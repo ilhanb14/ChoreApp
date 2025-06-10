@@ -1,12 +1,14 @@
-<div class="text-right">
 
+
+<div class="min-h-225 p-4 bg-linear-135 from-apple-green-800 to-tangelo-900">
+<div>
+    <div class="flex justify-end">
     <a href="{{ route('chores') }}"
-       class="inline-block m-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-        ← Back to Chore List
+       class="inline-block ml-2 mb-2 mt-1 px-2 py-2 bg-gray-600  text-white rounded hover:bg-gray-700">
+        Back to Chore List
     </a>
-
-<div class="min-h-220 flex items-center justify-center p-4 bg-linear-135 from-apple-green-800 to-tangelo-900">
-    <div class="max-w-md mx-auto p-4 bg-white shadow rounded-xl ">
+    </div>    
+<div class="max-w-md mx-auto p-4 bg-white shadow rounded-xl ">
     @if (session()->has('message'))
         <div class="mb-4 text-green-600">
             {{ session('message') }}
