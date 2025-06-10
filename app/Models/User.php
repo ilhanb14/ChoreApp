@@ -46,13 +46,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
-    public function families()
-    {
-        return $this->belongsToMany(Family::class)
-            ->withPivot('role')
-            ->withTimestamps();
-    }
 
     public function invites()
     {
@@ -65,5 +58,10 @@ class User extends Authenticatable
             ->where('family_id', $family->id)
             ->wherePivot('role', 'parent')
             ->exists();
+
+    public function families()
+    {
+        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
+                ->withPivot(['role', 'points']);
     }
 }

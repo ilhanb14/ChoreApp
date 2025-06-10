@@ -8,6 +8,7 @@ enum ClaimType: string
     case PerUser = 'per_user';
     case Repeat = 'repeat';
 
+
     public function label(): string
     {
         return match($this) {
@@ -16,4 +17,5 @@ enum ClaimType: string
             self::Repeat => 'Repeat',
         };
     }
+
 }
