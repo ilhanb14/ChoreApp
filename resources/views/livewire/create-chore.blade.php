@@ -1,3 +1,10 @@
+<div class="text-right">
+
+    <a href="{{ route('chores') }}"
+       class="inline-block m-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+        ← Back to Chore List
+    </a>
+
 <div class="min-h-220 flex items-center justify-center p-4 bg-linear-135 from-apple-green-800 to-tangelo-900">
     <div class="max-w-md mx-auto p-4 bg-white shadow rounded-xl ">
     @if (session()->has('message'))
@@ -70,4 +77,5 @@
 
         <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-tangelo to-tangelo-600 hover:from-tangelo-600 hover:to-tangelo-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">Save Chore</button>
     </form>
+</div>
 </div>
