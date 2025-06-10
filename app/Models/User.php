@@ -6,7 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use app\Models\Family;
+use App\Models\Family;
 
 class User extends Authenticatable
 {
@@ -47,6 +47,12 @@ class User extends Authenticatable
         ];
     }
 
+    public function families()
+    {
+        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
+                ->withPivot(['role', 'points']);
+    }
+
     public function invites()
     {
         return $this->hasMany(Invite::class, 'invited_id');
@@ -58,10 +64,5 @@ class User extends Authenticatable
             ->where('family_id', $family->id)
             ->wherePivot('role', 'parent')
             ->exists();
-
-    public function families()
-    {
-        return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
-                ->withPivot(['role', 'points']);
     }
 }
