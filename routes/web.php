@@ -19,3 +19,5 @@ Route::get('/rewards', [RewardsController::class, 'getRewardsView'])
     ->name('rewards');
 Route::post('/claim-reward', [RewardsController::class, 'claimReward'])
     ->name('claim-reward');
+Route::post('/remove-reward', [RewardsController::class, 'removeReward'])
+    ->name('remove-reward');

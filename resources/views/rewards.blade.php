@@ -14,6 +14,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @error('reward')
+        <div class="bg-tangelo-600 border border-tangelo-400 text-white px-4 py-3 rounded mb-4 max-w-80">
+            {{ $message }}
+        </div>
+    @enderror
     <div class="flex flex-wrap gap-8 justify-start mt-4 mb-6">
     @foreach($rewards as $reward)
         <div class="bg-white shadow-lg p-4 rounded-lg w-64">
@@ -22,29 +27,41 @@
             <p class="text-apple-green mb-4">
                 {{ ucwords(str_replace('_', ' ', $reward->claim_type)) }} {{--  --}}
             </p>
-            <form method="POST" action="{{ route('claim-reward') }}">
-            @csrf
-            <input type="hidden" name="reward_id" value="{{ $reward->id }}">
-            <input type="hidden" name="user_id" value="{{ $user->id }}">
+            
+            <div class="flex justify-between">
+                <form method="POST" action="{{ route('claim-reward') }}">
+                @csrf
+                <input type="hidden" name="reward_id" value="{{ $reward->id }}">
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
 
-            <button
-                @if (!$reward->available) disabled @endif
-                class="
-                    {{ $reward->available && $reward->points <= $points
-                        ? 'bg-selective-yellow hover:bg-selective-yellow-600 text-white border-selective-yellow-400'
-                        : 'bg-gray-300 text-gray-500 border-gray-400 cursor-not-allowed'
-                    }}
-                    font-semibold py-2 px-4 rounded-lg border
-            ">
-                @if(!$reward->available)
-                    Claimed
-                @elseif($reward->points > $points)
-                    Can't afford
-                @else
-                    Claim
+                <button
+                    @if (!$reward->available) disabled @endif
+                    class="
+                        {{ $reward->available && $reward->points <= $points
+                            ? 'bg-selective-yellow hover:bg-selective-yellow-600 text-white border-selective-yellow-400'
+                            : 'bg-gray-300 text-gray-500 border-gray-400 cursor-not-allowed'
+                        }}
+                        font-semibold py-2 px-4 rounded-lg border
+                ">
+                    @if(!$reward->available)
+                        Claimed
+                    @elseif($reward->points > $points)
+                        Can't afford
+                    @else
+                        Claim
+                    @endif
+                </button>
+                </form>
+
+                @if($familyRole == FamilyRole::Adult->value)
+                <form method="POST" action="{{ route('remove-reward') }}">
+                @csrf
+                <input type="hidden" name="reward_id" value="{{ $reward->id }}">
+
+                <button type='submit' class="rounded bg-tangelo-600 hover:bg-tangelo-700 border border-tangelo-400 text-white py-2 px-2"> X </button>
+                </form>
                 @endif
-            </button>
-            </form>
+            </div>
         </div>
     @endforeach
     </div>

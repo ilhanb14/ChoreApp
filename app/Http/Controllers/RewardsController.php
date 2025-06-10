@@ -7,11 +7,11 @@ use App\Models\Reward;
 use App\Models\Family;
 use App\Models\User;
 use App\Enums\ClaimType;
+use App\Enums\FamilyRole;
 
 class RewardsController extends Controller
 {
     public function getRewardsView(Request $request) {
-        // Temp hardcoded user
         $user = auth()->user();
 
         // Use family id in request or default to user's first family
@@ -80,6 +80,24 @@ class RewardsController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Reward successfully claimed!');
+    }
+
+    public function removeReward(Request $request) {
+        $request->validate([
+        'reward_id' => ['required', 'exists:rewards,id'],
+        ]);
+
+        $user = auth()->user();
+        $reward = Reward::find($request->reward_id);
+
+        // If user is not an adult in the family this reward belongs to
+        if (!$user->families()->wherePivot('role', FamilyRole::Adult->value)->get()->contains($reward->family)) {
+            return back()->withErrors(['reward', 'Unable to remove reward']);
+        }
+
+        $reward->delete();
+
+        return redirect()->back()->with('success', 'Reward removed');
     }
 
     /**
