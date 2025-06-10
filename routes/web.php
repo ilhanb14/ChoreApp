@@ -6,6 +6,7 @@ use App\Livewire\CreateChore;
 use App\Http\Controllers\RewardsController;
 use App\Livewire\ChoreList;
 use App\Livewire\EditChore;
+use App\Livewire\UserChores;
 
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\InviteController;
@@ -16,7 +17,13 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
+
+
+
+// Route::middleware(['auth'])->group(function () {
+
 Route::middleware(['auth'])->group(function () {
+
     // Family routes
     Route::post('/families', [FamilyController::class, 'create'])->name('families.create');
     Route::post('/families/{family}/invites', [FamilyController::class, 'sendInvite'])->name('families.invites.send');
@@ -33,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('chores');    
     Route::get('/chores/edit/{chore}', EditChore::class)
         ->name('edit-chore');
+    Route::get('/my-chores', UserChores::class)
+    ->name('user-chores');
 
     // Reward routes
     Route::get('/rewards', [RewardsController::class, 'getRewardsView'])

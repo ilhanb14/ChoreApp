@@ -9,10 +9,10 @@
     </div>
 
     <!-- List of chores -->
-    <ul class="space-y-4">
+    <ul class="flex-row space-y-4">
         @forelse ($chores as $chore)
-            <li class="p-2 pl-4 pr-4 m-4 bg-gray-100 rounded-xl border-gray-200 shadow-2xl">
-                <h3 class="font-bold text-lg">{{ $chore->title }}</h3>
+            <li class="pb-15 pt-2 pl-4 pr-4 m-4 bg-gray-100 rounded-xl border-gray-200 shadow-2xl">
+                <h3 class="underline font-bold text-lg">{{ $chore->title }}</h3>
                 <p>{{ $chore->description }}</p>
                 <p class="text-sm text-gray-600">Points: {{ $chore->points }}</p>
                 <p class="text-sm text-gray-600">Assigned To: {{ $chore->assigned_to }}</p>
@@ -24,13 +24,9 @@
                         class="float-right mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                     Delete
                 </button>
-                <button wire:click="markAsComplete({{ $chore->id }})"
-                        class="mt-2  px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                    Mark as Complete
-                </button>
-                <a href="{{ route('edit-chore', ['chore' => $chore->id]) }}"
-                class=" float-right mt-2 mr-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                Edit
+                <a href="{{ route('edit-chore', $chore->id) }}"
+                   class="float-left mt-2 mr-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">
+                    Edit
                 </a>
 
             </li>
