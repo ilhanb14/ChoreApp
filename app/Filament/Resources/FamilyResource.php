@@ -56,7 +56,7 @@ class FamilyResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+        RelationManagers\MembersRelationManager::class,
         ];
     }
 
