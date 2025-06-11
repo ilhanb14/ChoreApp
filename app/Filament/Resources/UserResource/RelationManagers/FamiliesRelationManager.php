@@ -48,7 +48,7 @@ class FamiliesRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('pivot.role')
+                Tables\Filters\SelectFilter::make('role')
                     ->label('Role')
                     ->options([
                         'adult' => 'Adult',
