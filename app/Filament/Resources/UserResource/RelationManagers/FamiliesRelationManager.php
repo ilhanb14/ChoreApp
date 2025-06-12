@@ -60,9 +60,9 @@ class FamiliesRelationManager extends RelationManager
                             ->searchable()
                             ->preload()
                             ->options(function () {
-                                $user = $this->getOwnerRecord();  // Get this family
+                                $user = $this->getOwnerRecord();  // Get this user
 
-                                // Get all users not in family yet
+                                // Get all families user is not in yet
                                 return Family::whereDoesntHave('members', function (Builder $query) use ($user) {
                                     $query->where('users.id', $user->id);
                                 })->pluck('name', 'id');
