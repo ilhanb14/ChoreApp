@@ -59,7 +59,14 @@ class FamiliesRelationManager extends RelationManager
                         $action->getRecordSelect()
                             ->searchable()
                             ->preload()
-                            ->options(Family::all()->pluck('name', 'id')) // Explicitly set options
+                            ->options(function () {
+                                $user = $this->getOwnerRecord();  // Get this family
+
+                                // Get all users not in family yet
+                                return Family::whereDoesntHave('members', function (Builder $query) use ($user) {
+                                    $query->where('users.id', $user->id);
+                                })->pluck('name', 'id');
+                            })
                             ->createOptionForm([
                                 Forms\Components\TextInput::make('name')
                                     ->required()
