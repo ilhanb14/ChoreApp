@@ -39,16 +39,14 @@ class MembersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('pivot.role')
+                Tables\Columns\TextColumn::make('role')
                     ->label('Role'),
-                Tables\Columns\TextColumn::make('pivot.points')
+                Tables\Columns\TextColumn::make('points')
                     ->label('Points')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('pivot.created_at')
                     ->label('Joined')
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')

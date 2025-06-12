@@ -40,12 +40,10 @@ class FamiliesRelationManager extends RelationManager
                     ->label('Role'),
                 Tables\Columns\TextColumn::make('pivot.points')
                     ->label('Points')
-                    ->numeric()
-                    ->sortable(),
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('pivot.created_at')
                     ->label('Joined')
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
