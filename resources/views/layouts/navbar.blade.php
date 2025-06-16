@@ -4,6 +4,9 @@
     </a>
 
     @auth
+        <a href="{{ url('/calendar') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Calendar
+        </a>
         <a href="{{ url('/chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Chores
         </a>
