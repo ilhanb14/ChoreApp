@@ -8,6 +8,7 @@ use App\Livewire\ChoreList;
 
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\InviteController;
+use App\Livewire\TasksCalendar;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,3 +40,6 @@ Route::post('/claim-reward', [RewardsController::class, 'claimReward'])
 Route::post('/remove-reward', [RewardsController::class, 'removeReward'])
     ->name('remove-reward');
 
+Route::get('/calendar', function () {
+    return view('livewire.tasks-calendar');
+});
