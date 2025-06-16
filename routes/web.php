@@ -10,6 +10,7 @@ use App\Livewire\UserChores;
 
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\InviteController;
+use App\Livewire\TasksCalendar;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,3 +55,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 
+Route::get('/calendar', function () {
+    return view('livewire.tasks-calendar');
+});
