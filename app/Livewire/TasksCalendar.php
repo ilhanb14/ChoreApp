@@ -12,6 +12,7 @@ class TasksCalendar extends LivewireCalendar
 {
     public $selectedFamilyId;
     public $userFamilies = [];
+    public $viewMode = 'month';
 
     // Enable drag and drop
     public $dragAndDropEnabled = true;
@@ -61,8 +62,7 @@ class TasksCalendar extends LivewireCalendar
     {
         if (Auth::check()) {
             $this->userFamilies = Auth::user()->families()->get();
-            $this->selectedFamilyId = session('current_family_id') ?? 
-                                    ($this->userFamilies->first() ? $this->userFamilies->first()->id : null);
+            $this->selectedFamilyId = session('current_family_id') ?? ($this->userFamilies->first() ? $this->userFamilies->first()->id : null);
         }
     }
 
@@ -97,7 +97,6 @@ class TasksCalendar extends LivewireCalendar
     {
         $this->selectedFamilyId = $familyId;
         session(['current_family_id' => $familyId]);
-        $this->dispatch('refreshCalendar');
     }
 
     public function onEventDropped($eventId, $year, $month, $day)
@@ -122,7 +121,44 @@ class TasksCalendar extends LivewireCalendar
         }
         
         $task->save();
-        
-        $this->dispatch('refreshCalendar');
+    }
+
+    public function switchToMonthView()
+    {
+        $this->viewMode = 'month';
+    }
+
+    public function switchToWeekView()
+    {
+        $this->viewMode = 'week';
+    }
+
+    public function switchToDayView()
+    {
+        $this->viewMode = 'day';
+    }
+
+        // Override the default calendar view
+    public function calendarView()
+    {
+        if ($this->viewMode === 'week') {
+            return 'vendor.livewire-calendar.week';
+        } elseif ($this->viewMode === 'day') {
+            return 'vendor.livewire-calendar.day-single';
+        }
+        return parent::calendarView();
+    }
+
+    // Get days for week view
+    public function getWeekDaysProperty()
+    {
+        $startOfWeek = $this->startsAt->copy()->startOfWeek();
+        $days = collect();
+
+        for ($i = 0; $i < 7; $i++) {
+            $days->push($startOfWeek->copy()->addDays($i));
+        }
+
+        return $days;
     }
 }
