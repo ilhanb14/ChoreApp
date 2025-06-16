@@ -13,6 +13,9 @@
         <a href="{{ url('/rewards') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Rewards
         </a>
+        <a href="{{ url('/invites') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Invites
+        </a>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
