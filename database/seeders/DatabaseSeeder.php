@@ -31,5 +31,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@chorebusters.be',
         ]);
+
+        $this->call([   // Needs to be called last because it uses Test User
+            InvitesTableSeeder::class,
+        ]);
     }
 }
