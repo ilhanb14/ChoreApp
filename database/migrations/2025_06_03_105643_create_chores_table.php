@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('points')->default(0);
             $table->date('due_date')->nullable();
             $table->string('assigned_to')->nullable();
-            $table->enum('frequency', ['daily', 'weekly', 'monthly'])->default('daily');
+            $table->string('frequency')->nullable();
             $table->timestamps();
         });
     }

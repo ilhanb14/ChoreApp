@@ -1,5 +1,5 @@
     </main>
-
-    @livewireScripts
+@livewireScripts
+@livewireCalendarScripts
 </body>
 </html>

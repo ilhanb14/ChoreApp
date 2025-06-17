@@ -19,6 +19,7 @@ class Reward extends Model
     }
 
     public function usersClaimed() {
-        return $this->belongsToMany(User::class, 'reward_user', 'reward_id', 'user_id');
+        return $this->belongsToMany(User::class, 'reward_user', 'reward_id', 'user_id')
+                ->withTimeStamps();
     }
 }
