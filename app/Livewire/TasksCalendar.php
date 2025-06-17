@@ -13,6 +13,7 @@ class TasksCalendar extends LivewireCalendar
     public $selectedFamilyId;
     public $userFamilies = [];
     public $viewMode = 'month';
+    public $currentViewDate;
 
     // Enable drag and drop
     public $dragAndDropEnabled = true;
@@ -56,6 +57,7 @@ class TasksCalendar extends LivewireCalendar
         );
 
         $this->loadUserFamilies();
+        $this->currentViewDate = Carbon::now();
     }
 
     protected function loadUserFamilies()
@@ -80,7 +82,7 @@ class TasksCalendar extends LivewireCalendar
             })
             ->get()
             ->map(function (Task $task) {
-                $date = $task->start_date ?? $task->deadline;
+                $date = $task->deadline ?? $task->start_date;
                 
                 return [
                     'id' => $task->id,
@@ -110,22 +112,25 @@ class TasksCalendar extends LivewireCalendar
         $newDate = Carbon::create($year, $month, $day);
         
         // Update start_date or deadline while preserving time
-        if ($task->start_date) {
-            $originalTime = Carbon::parse($task->start_date);
-            $newDate->setTime($originalTime->hour, $originalTime->minute);
-            $task->start_date = $newDate;
-        } else {
+        if ($task->deadline) {
             $originalTime = Carbon::parse($task->deadline);
             $newDate->setTime($originalTime->hour, $originalTime->minute);
             $task->deadline = $newDate;
+        } else {
+            $originalTime = Carbon::parse($task->start_date);
+            $newDate->setTime($originalTime->hour, $originalTime->minute);
+            $task->start_date = $newDate;
         }
         
         $task->save();
     }
 
+    // View Mode Switching
     public function switchToMonthView()
     {
         $this->viewMode = 'month';
+        // Update the month view to show the current view date's month
+        $this->startsAt = $this->currentViewDate->copy()->startOfMonth();
     }
 
     public function switchToWeekView()
@@ -138,21 +143,36 @@ class TasksCalendar extends LivewireCalendar
         $this->viewMode = 'day';
     }
 
-        // Override the default calendar view
-    public function calendarView()
+    // Custom render method to handle different views
+    public function render()
     {
         if ($this->viewMode === 'week') {
-            return 'vendor.livewire-calendar.week';
+            return view('livewire.tasks-calendar-week', [
+                'events' => $this->events(),
+                'weekDays' => $this->getWeekDays(),
+                'currentDate' => $this->currentViewDate,
+                'userFamilies' => $this->userFamilies,
+                'selectedFamilyId' => $this->selectedFamilyId,
+                'viewMode' => $this->viewMode,
+            ]);
         } elseif ($this->viewMode === 'day') {
-            return 'vendor.livewire-calendar.day-single';
+            return view('livewire.tasks-calendar-day', [
+                'events' => $this->events(),
+                'currentDate' => $this->currentViewDate,
+                'userFamilies' => $this->userFamilies,
+                'selectedFamilyId' => $this->selectedFamilyId,
+                'viewMode' => $this->viewMode,
+            ]);
         }
-        return parent::calendarView();
+        
+        // Default to parent month view
+        return parent::render();
     }
 
     // Get days for week view
-    public function getWeekDaysProperty()
+    public function getWeekDays()
     {
-        $startOfWeek = $this->startsAt->copy()->startOfWeek();
+        $startOfWeek = $this->currentViewDate->copy()->startOfWeek();
         $days = collect();
 
         for ($i = 0; $i < 7; $i++) {
@@ -160,5 +180,52 @@ class TasksCalendar extends LivewireCalendar
         }
 
         return $days;
+    }
+
+    // Week Navigation
+    public function goToPreviousWeek()
+    {
+        $this->currentViewDate = $this->currentViewDate->copy()->subWeek();
+    }
+
+    public function goToNextWeek()
+    {
+        $this->currentViewDate = $this->currentViewDate->copy()->addWeek();
+    }
+
+    public function goToCurrentWeek()
+    {
+        $this->currentViewDate = Carbon::today();
+    }
+
+    // Day Navigation
+    public function goToPreviousDay()
+    {
+        $this->currentViewDate = $this->currentViewDate->copy()->subDay();
+    }
+
+    public function goToNextDay()
+    {
+        $this->currentViewDate = $this->currentViewDate->copy()->addDay();
+    }
+
+    public function goToCurrentDay()
+    {
+        $this->currentViewDate = Carbon::today();
+    }
+
+    // Get current date for display
+    public function getCurrentDisplayDate()
+    {
+        if ($this->viewMode === 'month') {
+            return $this->startsAt;
+        }
+        return $this->currentViewDate;
+    }
+
+    public function onDayClick($year, $month, $day)
+    {
+        $this->currentViewDate = Carbon::create($year, $month, $day);
+        $this->viewMode = 'day';
     }
 }
