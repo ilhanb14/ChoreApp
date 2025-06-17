@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     // Chore routes
     Route::get('/create-chore', CreateChore::class)
         ->name('create-chore');
-    Route::get('/chores', ChoreList::class)
+    Route::get('/chores', CreateChore::class)
         ->name('chores');    
     Route::get('/chores/edit/{chore}', EditChore::class)
         ->name('edit-chore');
