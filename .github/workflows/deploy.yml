@@ -30,4 +30,4 @@ jobs:
           
       - name: Post-deployment commands
         run: |
-          ssh -o StrictHostKeyChecking=no productionserverbe@ssh.productionserver.be "cd subsites/spotmyalien.be/team4 && bash post-deploy.sh"
+          ssh -o StrictHostKeyChecking=no productionserverbe@ssh.productionserver.be "cd subsites/chorebusters.be && bash post-deploy.sh"
