@@ -16,10 +16,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Auth routes
 require __DIR__.'/auth.php';
-
-
-
 
 // Route::middleware(['auth'])->group(function () {
 
@@ -51,10 +49,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('claim-reward');
     Route::post('/remove-reward', [RewardsController::class, 'removeReward'])
         ->name('remove-reward');
-});
 
-
-
-Route::get('/calendar', function () {
-    return view('livewire.tasks-calendar');
+    // Calendar
+    Route::get('/calendar', function () {
+        return view('livewire.tasks-calendar');
+    });
 });

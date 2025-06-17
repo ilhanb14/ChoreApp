@@ -20,6 +20,10 @@
             Invites
         </a>
 
+        <a href="{{ url('/calendar') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Calendar
+        </a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="text-sm text-apple-green hover:text-tangelo hover:underline bg-transparent border-none p-0 cursor-pointer transition-colors">
