@@ -28,6 +28,7 @@ class TasksTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'created_by' => 2,
+                'description' => 'Cut grass on the lawn',
             ],
             [
                 'id' => 2,
@@ -41,6 +42,7 @@ class TasksTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'created_by' => 2,
+                'description' => 'Walk the dog',
             ],
             [
                 'id' => 3,
@@ -54,6 +56,7 @@ class TasksTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'created_by' => 4,
+                'description' => 'Wash the car',
             ],
             [
                 'id' => 4,
@@ -67,6 +70,7 @@ class TasksTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'created_by' => 2,
+                'description' => 'Pay taxes',
             ],
             [
                 'id' => 5,
@@ -80,6 +84,7 @@ class TasksTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
                 'created_by' => 1,
+                'description' => 'Wash the dishes',
             ],
         ];
 

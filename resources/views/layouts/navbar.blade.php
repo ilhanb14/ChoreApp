@@ -4,12 +4,20 @@
     </a>
 
     @auth
-        <a href="{{ url('/create-chore') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Make Chore
+        <a href="{{ url('/calendar') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Calendar
         </a>
-
+        <a href="{{ url('/chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Chores
+        </a>
+        <a href="{{ route('user-chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Your Chores
+        </a>
         <a href="{{ url('/rewards') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Rewards
+        </a>
+        <a href="{{ url('/invites') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            Invites
         </a>
 
         <form method="POST" action="{{ route('logout') }}">
