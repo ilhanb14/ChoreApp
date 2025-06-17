@@ -13,7 +13,8 @@ class Family extends Model
     public function members()
     {
         return $this->belongsToMany(User::class, 'family_user', 'family_id', 'user_id')
-                ->withPivot(['role', 'points']);
+                ->withPivot(['role', 'points'])
+                ->withTimeStamps();
     }
 
     public function rewards()

@@ -42,7 +42,7 @@
         <div>
             <label class="block  text-sm font-semibold">Frequency</label>
             <select type="text" wire:model="frequency" class="w-full border-2 border-gray-200 rounded-xl p-2">
-                <option value="">Select Frequency</option>
+                <option value="">Once</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
@@ -53,7 +53,7 @@
             <a href="{{ route('chores') }}" class="px-5 py-3 bg-gray-500 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
                 Back
             </a>
-            <button type="submit" class="px-4 py-2w-full py-3 px-6 bg-gradient-to-r from-tangelo to-tangelo-600 hover:from-tangelo-600 hover:to-tangelo-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">Save Changes</button>
+            <button type="submit" class="px-4 py-2w-full py-3 bg-gradient-to-r from-tangelo to-tangelo-600 hover:from-tangelo-600 hover:to-tangelo-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">Save Changes</button>
             
         </div>
 </div>
