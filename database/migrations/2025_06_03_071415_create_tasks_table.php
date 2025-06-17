@@ -17,7 +17,6 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('family_id');
             $table->foreignId('family_id')->constrained('families');
             $table->integer('points');
             $table->boolean('recurring')->default(0);
