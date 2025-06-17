@@ -18,7 +18,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('family_id');
+<<<<<<< HEAD
             $table->foreignId('family_id')->constrained('families');
+=======
+            $table->foreign('family_id')->references('id')->on('families');
+>>>>>>> 0e7dc06c05f76cf0b0ce2fc0d75671955b20f0b8
             $table->integer('points');
             $table->boolean('recurring')->default(0);
             $table->enum('frequency', array_column(TaskFrequency::cases(), 'value'))->nullable();

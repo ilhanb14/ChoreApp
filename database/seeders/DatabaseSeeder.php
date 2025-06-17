@@ -15,9 +15,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        $this->call([
+            UsersTableSeeder::class,
+            FamiliesTableSeeder::class,
+            TasksTableSeeder::class,
+            RewardsTableSeeder::class
+        ]);
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+        ]);
+
+        User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@chorebusters.be',
+        ]);
+
+        $this->call([   // Needs to be called last because it uses Test User
+            InvitesTableSeeder::class,
         ]);
     }
 }
