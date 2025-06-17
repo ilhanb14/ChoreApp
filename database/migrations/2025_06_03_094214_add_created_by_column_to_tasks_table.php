@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->bigInteger('created_by');
-            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreignId('created_by')->constrained('users');
         });
     }
 

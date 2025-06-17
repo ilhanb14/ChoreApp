@@ -16,10 +16,8 @@ return new class extends Migration
 
         Schema::create('family_user', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('family_id');
-            $table->foreign('family_id')->references('id')->on('families');
-            $table->bigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('family_id')->constrained('families');
+            $table->foreignId('user_id')->constrained('users');
             $table->enum('role', array_column(FamilyRole::cases(), 'value'))->default(FamilyRole::Child->value);
             $table->bigInteger('points');
             $table->timestamps();

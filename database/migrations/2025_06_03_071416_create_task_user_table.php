@@ -15,10 +15,8 @@ return new class extends Migration
 
         Schema::create('task_user', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->bigInteger('task_id');
-            $table->foreign('task_id')->references('id')->on('tasks');
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('task_id')->constrained('tasks');
             $table->dateTime('performed')->nullable();
             $table->string('comment')->nullable();
             $table->boolean('self_assigned')->default(false);
