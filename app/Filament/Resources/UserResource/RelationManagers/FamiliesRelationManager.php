@@ -46,7 +46,7 @@ class FamiliesRelationManager extends RelationManager
                     ->dateTime(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('role')
+                Tables\Filters\SelectFilter::make('role')   // Filter families where user has a specific role
                     ->label('Role')
                     ->options([
                         'adult' => 'Adult',
@@ -54,12 +54,12 @@ class FamiliesRelationManager extends RelationManager
                     ]),
             ])
             ->headerActions([
-                Tables\Actions\AttachAction::make()
+                Tables\Actions\AttachAction::make() // Attach = add user to family
                     ->form(fn (Tables\Actions\AttachAction $action): array => [
-                        $action->getRecordSelect()
+                        $action->getRecordSelect()  // Select options
                             ->searchable()
                             ->preload()
-                            ->options(function () {
+                            ->options(function () { // Families to choose from
                                 $user = $this->getOwnerRecord();  // Get this user
 
                                 // Get all families user is not in yet
@@ -67,7 +67,7 @@ class FamiliesRelationManager extends RelationManager
                                     $query->where('users.id', $user->id);
                                 })->pluck('name', 'id');
                             })
-                            ->createOptionForm([
+                            ->createOptionForm([    // Create a new family to add user to
                                 Forms\Components\TextInput::make('name')
                                     ->required()
                                     ->maxLength(255)
@@ -76,7 +76,7 @@ class FamiliesRelationManager extends RelationManager
                             ->createOptionUsing(function (array $data): int {
                                 return Family::create($data)->getKey();
                             }),
-                        Forms\Components\Select::make('role')
+                        Forms\Components\Select::make('role')   // Pivot data for this relation
                             ->label('Role')
                             ->options([
                                 'adult' => 'Adult',
@@ -92,7 +92,7 @@ class FamiliesRelationManager extends RelationManager
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make()   // Edit pivot data for a relation
                     ->form([
                         Forms\Components\Select::make('role')
                             ->label('Role')
@@ -106,10 +106,10 @@ class FamiliesRelationManager extends RelationManager
                             ->numeric()
                             ->required(),
                     ]),
-                Tables\Actions\DetachAction::make(),
+                Tables\Actions\DetachAction::make(),    // Detach = remove user from family
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->bulkActions([     // Allow selecting multiple rows to do something
+                Tables\Actions\BulkActionGroup::make([  // Remove multiple rows (= remove user from multiple families)
                     Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
