@@ -75,4 +75,10 @@ class User extends Authenticatable implements FilamentUser
     {
         return str_ends_with($this->email, '@chorebusters.be') && $this->hasVerifiedEmail();
     }
+
+        public function chores()
+    {
+        return $this->belongsToMany(Task::class, 'task_user')
+    ->withTimestamps();
+    }
 }
