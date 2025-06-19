@@ -13,6 +13,16 @@ use App\Http\Controllers\InviteController;
 use App\Livewire\TasksCalendar;
 
 Route::get('/', function () {
+    $user = auth()->user();
+    if ($user) {
+        $recommendedChore = $user->chores()
+            ->wherePivotNull('performed')
+            ->orderByDesc('deadline')
+            ->first();
+
+        return view('welcome', ['recommendedChore' => $recommendedChore]);
+    }
+
     return view('welcome');
 });
 
