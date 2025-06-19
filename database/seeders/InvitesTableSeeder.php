@@ -25,6 +25,8 @@ class InvitesTableSeeder extends Seeder
                 'family_id' => 1,
                 'role' => 'child',
                 'status' => 'accepted',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 2,
@@ -33,6 +35,8 @@ class InvitesTableSeeder extends Seeder
                 'family_id' => 1,
                 'role' => 'adult',
                 'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'id' => 3,
@@ -41,6 +45,8 @@ class InvitesTableSeeder extends Seeder
                 'family_id' => 2,
                 'role' => 'child',
                 'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ];
 
