@@ -51,7 +51,8 @@
             <a href="{{ url('/my-chores') }}" class='text-xl font-semibold text-selective-yellow hover:underline'> {{ $recommendedChore->name }} </a>
             <p class='text-xl text-gray-700'>
                 <span class='font-semibold'> Description: </span> {{ $recommendedChore->description ?? "None" }} <br>
-                <span class='font-semibold'> Deadline: </span> {{ \Carbon\Carbon::parse($recommendedChore->deadline)->format('d/m/Y') }}
+                <span class='font-semibold'> Deadline: </span> {{ \Carbon\Carbon::parse($recommendedChore->deadline)->format('d/m/Y') }} <br>
+                <span class='font-semibold'> Points: </span> {{ $recommendedChore->points }}
             </p>
         @else
             <h1 class="text-2xl font-bold text-apple-green mb-2">Recommended chore</h1>
