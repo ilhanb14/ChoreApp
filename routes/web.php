@@ -17,7 +17,7 @@ Route::get('/', function () {
     if ($user) {
         $recommendedChore = $user->chores()
             ->wherePivotNull('performed')
-            ->orderByDesc('deadline')
+            ->orderBy('deadline')
             ->first();
 
         return view('welcome', ['recommendedChore' => $recommendedChore]);
