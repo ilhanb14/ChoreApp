@@ -9,4 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateChore extends CreateRecord
 {
     protected static string $resource = ChoreResource::class;
+
+    protected static ?string $title = 'Create Chore';
 }
