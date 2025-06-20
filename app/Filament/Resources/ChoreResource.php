@@ -58,7 +58,10 @@ class ChoreResource extends Resource
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('frequency')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => 
+                        $state ? ucwords(str_replace('_', ' ', $state)) : '-'
+                    ),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
