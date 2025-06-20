@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Family;
 
 class ChoreResource extends Resource
 {
@@ -23,7 +24,53 @@ class ChoreResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('points')
+                    ->numeric()
+                    ->default(0)
+                    ->required(),
+                Forms\Components\Select::make('family_id')
+                    ->relationship('family', 'name')
+                    ->preload()
+                    ->searchable()
+                    ->required()
+                    ->live(),
+                Forms\Components\Select::make('created_by')
+                    ->searchable()
+                    ->options(function (callable $get) {
+                        // Get currently selected family
+                        $familyId = $get('family_id');
+        
+                        if (!$familyId) {  // If none selected, show no options yet
+                            return [];
+                        }
+                        
+                        // Get all adults in the family
+                        return Family::find($familyId)
+                            ->adults()
+                            ->pluck('name', 'user_id');
+                    })
+                    ->required()
+                    ->live(),
+                Forms\Components\Checkbox::make('recurring')
+                    ->inline(false)
+                    ->live(),
+                Forms\Components\Select::make('frequency')
+                    ->options([
+                            'daily' => 'Daily',
+                            'weekly' => 'Weekly',
+                            'monthly' => 'Monthly'
+                        ])
+                    ->required(fn (Forms\Get $get) => $get('recurring'))
+                    ->disabled(fn (Forms\Get $get) => !$get('recurring')),
+                Forms\Components\DateTimePicker::make('start_date')
+                    ->format('Y-m-d H:i:s'),
+                Forms\Components\DateTimePicker::make('deadline')
+                    ->format('Y-m-d H:i:s'),
+                Forms\Components\Textarea::make('description')
+                    ->required(),
             ]);
     }
 
