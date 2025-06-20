@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Chores extends Model
 {
@@ -30,4 +31,9 @@ public function users(): BelongsToMany
                 // ->withPivot(['performed', 'comment', 'self_assigned', 'confirmed'])
                 ->withTimestamps();
 }
+
+    public function family(): BelongsTo
+    {
+        return $this->belongsTo(Family::class);
+    }
 }
