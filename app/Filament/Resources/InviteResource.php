@@ -96,11 +96,11 @@ class InviteResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
                     ->formatStateUsing(fn ($state) => 
-                        $state ? ucwords(str_replace('_', ' ', $state)) : '-'
+                        $state ? ucwords(str_replace('_', ' ', $state->value)) : '-'
                     ),
                 Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn ($state) => 
-                        $state ? ucwords(str_replace('_', ' ', $state)) : '-'
+                        $state ? ucwords(str_replace('_', ' ', $state->value)) : '-'
                     ),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Sent on')
