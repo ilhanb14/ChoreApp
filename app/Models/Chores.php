@@ -36,4 +36,9 @@ class Chores extends Model
     {
         return $this->belongsTo(Family::class);
     }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }
