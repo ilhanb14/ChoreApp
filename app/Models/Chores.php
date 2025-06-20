@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Chores extends Model
 {
@@ -24,10 +25,20 @@ class Chores extends Model
     ];
 
     // Many-to-many relationship with users via 'task_user' pivot table
-public function users(): BelongsToMany
-{
-    return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id',)
-                // ->withPivot(['performed', 'comment', 'self_assigned', 'confirmed'])
-                ->withTimestamps();
-}
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id',)
+                    ->withPivot(['performed', 'comment', 'assigned_by', 'confirmed'])
+                    ->withTimestamps();
+    }
+
+    public function family(): BelongsTo
+    {
+        return $this->belongsTo(Family::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

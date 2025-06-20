@@ -94,8 +94,14 @@ class InviteResource extends Resource
                     ->label('Family')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('role'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('role')
+                    ->formatStateUsing(fn ($state) => 
+                        $state ? ucwords(str_replace('_', ' ', $state->value)) : '-'
+                    ),
+                Tables\Columns\TextColumn::make('status')
+                    ->formatStateUsing(fn ($state) => 
+                        $state ? ucwords(str_replace('_', ' ', $state->value)) : '-'
+                    ),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Sent on')
                     ->sortable(),
