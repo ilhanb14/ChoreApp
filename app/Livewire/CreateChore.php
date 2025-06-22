@@ -70,7 +70,7 @@ public function save()
     ]);
 
     $task->users()->attach($validated['assigned_to'], [
-        'performed' => false,
+        'performed' => null,
         'confirmed' => false,
         'assigned_by' => Auth::id(),
     ]);
