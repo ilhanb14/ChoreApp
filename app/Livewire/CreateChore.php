@@ -51,7 +51,7 @@ public function save()
     $validated = $this->validate([
         'title' => 'required|string|min:3',
         'description' => 'nullable|string',
-        'assigned_to' => 'required|exists:users,id',
+        'assigned_to' => 'nullable|exists:users,id',
         'points' => 'required|integer|min:0',
         'due_date' => 'nullable|date',
         'isRecurring' => 'boolean',
@@ -69,6 +69,7 @@ public function save()
         'created_by' => $user->id,  
     ]);
 
+if ($validated['assigned_to']) {
     $task->users()->attach($validated['assigned_to'], [
         'performed' => null,
         'confirmed' => false,
@@ -76,6 +77,9 @@ public function save()
     ]);
 
     session()->flash('message', 'Chore created and assigned successfully.');
+} else {
+    session()->flash('message', 'Bonus task created successfully.');
+}
 
     $this->reset(['title', 'description', 'assigned_to', 'points', 'due_date', 'isRecurring', 'frequency']);
 }

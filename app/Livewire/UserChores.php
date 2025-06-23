@@ -13,11 +13,12 @@ class UserChores extends Component
     public $chores;
     public $completedChores = [];
     public $isAdult = false;
-    public $filter = 'assigned_to_me'; // only 'assigned_to_me' & 'assigned_to_children'
+    public $filter = 'assigned_to_me';
     public $familyUsers = [];
     public $childrenIds = [];
     public $totalPoints = 0;
     public $pendingConfirmations = [];
+    public $bonusTasks = [];
 
     public function mount()
     {
@@ -27,6 +28,7 @@ class UserChores extends Component
         if (!$family) {
             $this->chores = collect();
             $this->completedChores = collect();
+            $this->bonusTasks = collect();
             return;
         }
 
@@ -44,6 +46,7 @@ class UserChores extends Component
 
         $this->loadChores();
         $this->loadPointsAndCompletions();
+        $this->loadBonusTasks($family->id);
     }
 
     public function updatedFilter()
@@ -51,46 +54,43 @@ class UserChores extends Component
         $this->loadChores();
     }
 
-   public function loadChores()
-{
-    $user = Auth::user();
-    $family = $user->families()->first();
+    public function loadChores()
+    {
+        $user = Auth::user();
+        $family = $user->families()->first();
 
-    // IDs of chores confirmed as completed by this user
-    $completedChoreIds = DB::table('task_user')
-        ->where('user_id', $user->id)
-        ->where('confirmed', true)
-        ->pluck('task_id')
-        ->toArray();
+        $completedChoreIds = DB::table('task_user')
+            ->where('user_id', $user->id)
+            ->where('confirmed', true)
+            ->pluck('task_id')
+            ->toArray();
 
-    if ($this->isAdult) {
-        if ($this->filter === 'assigned_to_me') {
-            $query = Chores::where('family_id', $family->id)
-                ->whereHas('users', fn($q) => $q->where('users.id', $user->id));
-            $query->whereNotIn('id', $completedChoreIds);
-        } elseif ($this->filter === 'assigned_to_children') {
-            $completedByChildrenIds = DB::table('task_user')
-                ->whereIn('user_id', $this->childrenIds)
-                ->where('confirmed', true)
-                ->pluck('task_id')
-                ->toArray();
+        if ($this->isAdult) {
+            if ($this->filter === 'assigned_to_me') {
+                $query = Chores::where('family_id', $family->id)
+                    ->whereHas('users', fn($q) => $q->where('users.id', $user->id));
+            } elseif ($this->filter === 'assigned_to_children') {
+                $query = Chores::where('family_id', $family->id)
+                    ->whereHas('users', fn($q) => $q->whereIn('users.id', $this->childrenIds))
+                    ->whereDoesntHave('users', fn($q) =>
+                        $q->whereIn('users.id', $this->childrenIds)
+                          ->wherePivot('confirmed', true)
+                    );
+            } else {
+                $query = Chores::where('family_id', $family->id);
+            }
 
-            $query = Chores::where('family_id', $family->id)
-                ->whereHas('users', fn($q) => $q->whereIn('users.id', $this->childrenIds))
-                ->whereNotIn('id', $completedByChildrenIds);
+            $this->chores = $query->whereNotIn('id', $completedChoreIds)
+                ->with('users')
+                ->get();
         } else {
-            $query = Chores::where('family_id', $family->id);
+            $this->chores = $user->chores()
+                ->whereNotIn('tasks.id', $completedChoreIds)
+                ->with('users')
+                ->get();
         }
-
-        $this->chores = $query->with('users')->get();
-    } else {
-        // Children see chores assigned to them NOT confirmed completed
-        $this->chores = $user->chores()
-            ->whereNotIn('tasks.id', $completedChoreIds)
-            ->with('users')
-            ->get();
     }
-}
+
     public function loadPointsAndCompletions()
     {
         $user = Auth::user();
@@ -107,7 +107,7 @@ class UserChores extends Component
                 ->where('task_user.user_id', $user->id)
                 ->where('task_user.confirmed', true)
                 ->orderByDesc('task_user.updated_at')
-                ->limit(6)
+                ->limit(4)
                 ->get(['tasks.name', 'tasks.points']);
         } else {
             $this->pendingConfirmations = DB::table('task_user')
@@ -119,6 +119,53 @@ class UserChores extends Component
                 ->orderBy('task_user.updated_at', 'desc')
                 ->get(['task_user.task_id', 'task_user.user_id', 'tasks.name as task_name', 'users.name as user_name']);
         }
+    }
+
+    public function loadBonusTasks()
+{
+    $user = Auth::user();
+    $family = $user->families()->first();
+
+    if (!$family) {
+        $this->bonusTasks = [];
+        return;
+    }
+
+    // Fetch tasks in the family that have no users assigned yet
+    $this->bonusTasks = Chores::where('family_id', $family->id)
+        ->whereDoesntHave('users')
+        ->get();
+}
+
+    public function claimBonusTask($taskId)
+    {
+        $user = Auth::user();
+        $task = Chores::find($taskId);
+
+    if (!$task) {
+        session()->flash('error', 'Task not found.');
+        return;
+    }
+
+    // Don't allow claiming if already claimed
+    if ($task->users()->exists()) {
+        session()->flash('error', 'This task has already been claimed.');
+        return;
+    }
+
+    // Assign the current user
+        $task->users()->attach($user->id, [
+            'performed' => null,
+            'confirmed' => false,
+            'assigned_by' => $user->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+    ]);
+
+        session()->flash('message', 'Bonus task claimed!');
+        $this->loadChores(); // refresh view
+        $this->loadPointsAndCompletions(); // refresh sidebar
+        $this->loadBonusTasks(); // refresh bonus tasks    
     }
 
     public function markAsDone($choreId)
@@ -143,8 +190,6 @@ class UserChores extends Component
                 'updated_at' => now(),
             ]);
 
-
-
         $this->loadChores();
         $this->loadPointsAndCompletions();
     }
@@ -161,6 +206,7 @@ class UserChores extends Component
         session()->flash('message', 'Chore deleted.');
     }
 
+
     public function render()
     {
         return view('livewire.user-chores', [
@@ -170,6 +216,7 @@ class UserChores extends Component
             'pendingConfirmations' => $this->pendingConfirmations,
             'totalPoints' => $this->totalPoints,
             'filter' => $this->filter,
+            'bonusTasks' => $this->bonusTasks,
         ]);
     }
 }
