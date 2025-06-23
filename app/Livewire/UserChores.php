@@ -133,36 +133,38 @@ class UserChores extends Component
         }
     }
 
-    public function loadPointsAndCompletions(int $familyId, int $userId)
-    {
-        $user = Auth::user();
+public function loadPointsAndCompletions(int $familyId, int $userId)
+{
+    $user = Auth::user();
 
-        $pointsRecord = DB::table('family_user')
-            ->where('family_id', $familyId)
-            ->where('user_id', $userId)
-            ->first(['points']);
+    $pointsRecord = DB::table('family_user')
+        ->where('family_id', $familyId)
+        ->where('user_id', $userId)
+        ->first(['points']);
 
-        $this->totalPoints = $pointsRecord ? $pointsRecord->points : 0;
+    $this->totalPoints = $pointsRecord ? $pointsRecord->points : 0;
 
-        if (!$this->isAdult) {
-            $this->completedChores = DB::table('task_user')
-                ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
-                ->where('task_user.user_id', $user->id)
-                ->where('task_user.confirmed', true)
-                ->orderByDesc('task_user.updated_at')
-                ->limit(6)
-                ->get(['tasks.name', 'tasks.points']);
-        } else {
-            $this->pendingConfirmations = DB::table('task_user')
-                ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
-                ->join('users', 'task_user.user_id', '=', 'users.id')
-                ->whereIn('task_user.user_id', $this->childrenIds)
-                ->whereNotNull('task_user.performed')
-                ->where('task_user.confirmed', false)
-                ->orderBy('task_user.updated_at', 'desc')
-                ->get(['task_user.task_id', 'task_user.user_id', 'tasks.name as task_name', 'users.name as user_name']);
-        }
+    $this->completedChores = DB::table('task_user')
+        ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
+        ->where('task_user.user_id', $userId)
+        ->where('task_user.confirmed', true)
+        ->where('tasks.family_id', $familyId) 
+        ->orderByDesc('task_user.updated_at')
+        ->limit(4)
+        ->get(['tasks.name', 'tasks.points']);
+
+    if ($this->isAdult) {
+        $this->pendingConfirmations = DB::table('task_user')
+            ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
+            ->join('users', 'task_user.user_id', '=', 'users.id')
+            ->whereIn('task_user.user_id', $this->childrenIds)
+            ->whereNotNull('task_user.performed')
+            ->where('task_user.confirmed', false)
+            ->where('tasks.family_id', $familyId) 
+            ->orderBy('task_user.updated_at', 'desc')
+            ->get(['task_user.task_id', 'task_user.user_id', 'tasks.name as task_name', 'users.name as user_name']);
     }
+}
 
     public function loadBonusTasks()
     {
