@@ -22,4 +22,9 @@ enum FamilyRole: string
             self::Child->value => self::Child->label(),
         ];
     }
+
+    public static function values(): array
+    {
+        return array_map(fn($case) => $case->value, self::cases());
+    }
 }

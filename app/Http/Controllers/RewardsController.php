@@ -8,6 +8,8 @@ use App\Models\Family;
 use App\Models\User;
 use App\Enums\ClaimType;
 use App\Enums\FamilyRole;
+use App\Mail\RewardClaimEmail;
+use Illuminate\Support\Facades\Mail;
 
 class RewardsController extends Controller
 {
@@ -62,7 +64,7 @@ class RewardsController extends Controller
             return back()->withErrors(['reward' => 'Reward already claimed']);
         }
 
-        // Get poinst from family pivot
+        // Get points from family pivot
         $family = $user->families()->where('family_id', $reward->family_id)->first();
         $points = $family->pivot->points;
 
@@ -79,7 +81,26 @@ class RewardsController extends Controller
             'points' => $points - $reward->points,
         ]);
 
+        // Send notification to all adults in the family
+        $this->sendRewardClaimEmails($user, $reward, $family);
+
         return redirect()->back()->with('success', 'Reward successfully claimed!');
+    }
+
+    protected function sendRewardClaimEmails(User $child, Reward $reward, Family $family)
+    {
+        // Get all adult members of the family
+        $adults = $family->users()
+                    ->wherePivot('role', 'adult')
+                    ->get();
+
+        foreach ($adults as $adult) {
+            Mail::to($adult->email)->send(new RewardClaimEmail(
+                $child,
+                $reward,
+                $family
+            ));
+        }
     }
 
     public function removeReward(Request $request) {

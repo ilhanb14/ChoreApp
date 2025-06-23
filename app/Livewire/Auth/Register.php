@@ -6,6 +6,8 @@ use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
 
 class Register extends Component
 {
@@ -27,6 +29,8 @@ class Register extends Component
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
+
+        Mail::to($user->email)->send(new WelcomeEmail($user));
 
         Auth::login($user);
 

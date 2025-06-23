@@ -7,8 +7,82 @@
                     Your Invitations
                 </h1>
                 <p class="text-apple-green-500 text-lg">
-                    Manage your family invitation requests
+                    Manage your family invitations
                 </p>
+            </div>
+
+            @if (session()->has('success'))
+                <div class="mb-4 p-4 bg-apple-green-100 text-apple-green-800 rounded-xl">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session()->has('error'))
+                <div class="mb-4 p-4 bg-tangelo-100 text-tangelo-800 rounded-xl">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <!-- Invitation Form (Always Visible) -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Invite New Member</h2>
+                
+                <form wire:submit.prevent="invite" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Email Input -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input 
+                                wire:model="email" 
+                                type="email" 
+                                placeholder="Enter email"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-picton-blue focus:outline-none bg-white/80 transition-all duration-300"
+                            >
+                            @error('email') 
+                                <span class="text-red-500 text-sm">{{ $message }}</span> 
+                            @enderror
+                        </div>
+
+                        <!-- Family Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Family</label>
+                            <select 
+                                wire:model="family_id" 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-picton-blue focus:outline-none bg-white/80 transition-all duration-300"
+                            >
+                                <option value="">Select Family</option>
+                                @foreach($families as $family)
+                                    <option value="{{ $family->id }}">{{ $family->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('family_id') 
+                                <span class="text-red-500 text-sm">{{ $message }}</span> 
+                            @enderror
+                        </div>
+
+                        <!-- Role Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <select 
+                                wire:model="role" 
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-picton-blue focus:outline-none bg-white/80 transition-all duration-300"
+                            >
+                                @foreach(\App\Enums\FamilyRole::cases() as $role)
+                                    <option value="{{ $role->value }}">{{ $role->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button 
+                            type="submit" 
+                            class="w-full md:w-auto py-3 px-6 bg-gradient-to-r from-tangelo to-tangelo-600 hover:from-tangelo-600 hover:to-tangelo-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl"
+                        >
+                            Send Invitation
+                        </button>
+                    </div>
+                </form>
             </div>
 
             @if($invites->isEmpty())
