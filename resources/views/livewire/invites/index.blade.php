@@ -1,4 +1,4 @@
-<x-layouts.app title="Your Invitations">
+<div>
     <div class="h-full flex items-center justify-center p-4">
         <div class="w-full max-w-4xl">
             <!-- Page Header -->
@@ -95,19 +95,15 @@
 
                             <!-- Action Buttons -->
                             <div class="flex space-x-3">
-                                <form action="{{ route('invite.accept', $invite) }}" method="POST" class="flex-1">
-                                    @csrf
-                                    <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-apple-green-600 to-apple-green-500 hover:from-apple-green-500 hover:to-apple-green-300 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
-                                        Accept
-                                    </button>
-                                </form>
+                                <button wire:click="accept({{ $invite->id }})" 
+                                        class="w-full py-3 px-4 bg-gradient-to-r from-apple-green-600 to-apple-green-500 hover:from-apple-green-500 hover:to-apple-green-300 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
+                                    Accept
+                                </button>
                                 
-                                <form action="{{ route('invite.decline', $invite) }}" method="POST" class="flex-1">
-                                    @csrf
-                                    <button type="submit" class="w-full py-3 px-4 bg-gradient-to-r from-tangelo-600 to-tangelo-500 hover:from-tangelo-500 hover:to-tangelo-400 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
-                                        Decline
-                                    </button>
-                                </form>
+                                <button wire:click="decline({{ $invite->id }})" 
+                                        class="w-full py-3 px-4 bg-gradient-to-r from-tangelo-600 to-tangelo-500 hover:from-tangelo-500 hover:to-tangelo-400 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
+                                    Decline
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -116,4 +112,4 @@
             @endif
         </div>
     </div>
-</x-layouts.app>
+</div
