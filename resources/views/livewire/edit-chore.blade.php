@@ -27,17 +27,6 @@
                     @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Description --}}
-                <div class="mb-4">
-                    <label class="block">Description</label>
-                    <textarea 
-                        wire:model="description"
-                        class="w-full border-2 border-gray-200 rounded-xl p-2"
-                        placeholder="Enter chore description"
-                        rows="4"
-                    ></textarea>
-                    @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
 
                 {{-- Assigned To --}}
                 <div class="mb-4">

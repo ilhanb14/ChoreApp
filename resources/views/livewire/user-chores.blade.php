@@ -2,6 +2,19 @@
 
   <!-- Your Chores Box -->
   <div class="flex-grow basis-[60%] min-w-[400px] bg-white rounded-xl shadow p-6">
+  @if(count($userFamilies) > 1)
+    <div class="w-60">
+        <select 
+            wire:change="changeFamily($event.target.value)"
+            class="w-full px-4 py-2 mb-4  bg-white border border-gray-300 rounded ">
+            @foreach($userFamilies as $family)
+                <option value="{{ $family->id }}" {{ $family->id == $selectedFamilyId ? 'selected' : '' }}>
+                {{ $family->name }}
+              </option>
+            @endforeach
+          </select>
+      </div>
+  @endif
     <h2 class="text-2xl font-bold mb-4">Your Chores</h2>
 
     @if (session()->has('message'))
@@ -88,54 +101,55 @@
     @endif
 
     <div class="bg-gray-100 p-4 rounded-xl shadow flex-grow overflow-y-auto max-h-[600px]">
-      @if(!$isAdult)
-        <h3 class="text-xl font-semibold mb-4">Recently Completed Chores</h3>
-        <ul class="space-y-3 mb-6">
-          @forelse ($completedChores as $done)
-            <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
-              <span>{{ $done->name }}</span>
-              <span class="font-semibold">+{{ $done->points }} pts</span>
-            </li>
-          @empty
-            <li>No completed chores yet.</li>
-          @endforelse
-        </ul>
+@if(count($completedChores))
+  <h3 class="text-xl font-semibold mb-4">Recently Completed Chores</h3>
+  <ul class="space-y-3 mb-6">
+    @foreach ($completedChores as $done)
+      <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
+        <span>{{ $done->name }}</span>
+        <span class="font-semibold">+{{ $done->points }} pts</span>
+      </li>
+    @endforeach
+  </ul>
+@endif
 
-        @if(count($bonusTasks))
-          <h3 class="text-xl font-semibold mb-4">Bonus Tasks Available</h3>
-          <ul class="space-y-3">
-            @foreach($bonusTasks as $bonus)
-              <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
-                <div>
-                  <span>{{ $bonus->name }}</span>
-                  <span class="ml-2 text-sm text-gray-600">(+{{ $bonus->points }} pts)</span>
-                </div>
-                <button wire:click="claimBonusTask({{ $bonus->id }})" class="px-3 py-1 bg-picton-blue text-white rounded hover:bg-picton-blue-400">
-                  Claim
-                </button>
-              </li>
-            @endforeach
-          </ul>
-        @endif
 
-      @else
-        <h3 class="text-xl font-semibold mb-4">Pending Confirmations</h3>
-        @if(count($pendingConfirmations))
-          <ul class="space-y-3">
-            @foreach($pendingConfirmations as $pending)
-                <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
-                    <div>
-                        <span class="font-semibold">{{ $pending->user_name }}</span> completed:
-                        <div class=" font-semibold text-sm">{{ $pending->task_name }}</div>
-                    </div>
-                    <button wire:click="confirmCompletion({{ $pending->task_id }}, {{ $pending->user_id }})" class="px-3 py-1 bg-apple-green text-white rounded hover:bg-apple-green-400">Confirm</button>
-                </li>
-            @endforeach
-          </ul>
-        @else
-          <p>No pending confirmations.</p>
-        @endif
-      @endif
+@if(count($bonusTasks))
+  <h3 class="text-xl font-semibold mb-4">Bonus Tasks Available</h3>
+  <ul class="space-y-3 mb-6">
+    @foreach($bonusTasks as $bonus)
+      <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
+        <div>
+          <span>{{ $bonus->name }}</span>
+          <span class="ml-2 text-sm text-gray-600">(+{{ $bonus->points }} pts)</span>
+        </div>
+        <button wire:click="claimBonusTask({{ $bonus->id }})" class="px-3 py-1 bg-picton-blue text-white rounded hover:bg-picton-blue-400">
+          Claim
+        </button>
+      </li>
+    @endforeach
+  </ul>
+@endif
+
+@if($isAdult)
+  <h3 class="text-xl font-semibold mb-4">Pending Confirmations</h3>
+  @if(count($pendingConfirmations))
+    <ul class="space-y-3">
+      @foreach($pendingConfirmations as $pending)
+        <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">
+          <div>
+            <span class="font-semibold">{{ $pending->user_name }}</span> completed:
+            <div class="font-semibold text-sm">{{ $pending->task_name }}</div>
+          </div>
+          <button wire:click="confirmCompletion({{ $pending->task_id }}, {{ $pending->user_id }})" class="px-3 py-1 bg-apple-green text-white rounded hover:bg-apple-green-400">Confirm</button>
+        </li>
+      @endforeach
+    </ul>
+  @else
+    <p>No pending confirmations.</p>
+  @endif
+@endif
+
     </div>
   </div>
 </div>
