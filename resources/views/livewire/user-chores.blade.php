@@ -81,6 +81,12 @@
     <h2 class="text-2xl font-bold mb-4">Hello, {{ auth()->user()->name }}</h2>
     <p class="mb-4">Total points earned: <span class="font-semibold">{{ $totalPoints }}</span></p>
 
+        @if($isAdult)
+      <div class="flex justify-end mb-6">
+        <a href="{{ url('/chores') }}" class="inline-block px-5 py-2 bg-apple-green text-white text-sm font-medium rounded-md shadow-sm hover:bg-tangelo transition-all duration-200">+ Create Chore</a>
+      </div>
+    @endif
+
     <div class="bg-gray-100 p-4 rounded-xl shadow flex-grow overflow-y-auto max-h-[600px]">
       @if(!$isAdult)
         <h3 class="text-xl font-semibold mb-4">Recently Completed Chores</h3>
