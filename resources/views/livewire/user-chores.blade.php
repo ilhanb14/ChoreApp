@@ -113,6 +113,7 @@
   </ul>
 @endif
 
+
 @if(count($bonusTasks))
   <h3 class="text-xl font-semibold mb-4">Bonus Tasks Available</h3>
   <ul class="space-y-3 mb-6">
@@ -148,6 +149,7 @@
     <p>No pending confirmations.</p>
   @endif
 @endif
+
     </div>
   </div>
 </div>
