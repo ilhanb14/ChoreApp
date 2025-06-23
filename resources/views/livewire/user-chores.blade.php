@@ -2,6 +2,19 @@
 
   <!-- Your Chores Box -->
   <div class="flex-grow basis-[60%] min-w-[400px] bg-white rounded-xl shadow p-6">
+  @if(count($userFamilies) > 1)
+    <div class="w-60">
+        <select 
+            wire:change="changeFamily($event.target.value)"
+            class="w-full px-4 py-2 mb-4  bg-white border border-gray-300 rounded ">
+            @foreach($userFamilies as $family)
+                <option value="{{ $family->id }}" {{ $family->id == $selectedFamilyId ? 'selected' : '' }}>
+                {{ $family->name }}
+              </option>
+            @endforeach
+          </select>
+      </div>
+  @endif
     <h2 class="text-2xl font-bold mb-4">Your Chores</h2>
 
     @if (session()->has('message'))

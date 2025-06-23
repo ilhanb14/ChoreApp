@@ -6,7 +6,6 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Chores;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class UserChores extends Component
 {
@@ -20,12 +19,18 @@ class UserChores extends Component
     public $pendingConfirmations = [];
     public $bonusTasks = [];
 
+    public $userFamilies = [];
+    public $selectedFamilyId;
+
     public function mount()
     {
         $user = Auth::user();
-        $family = $user->families()->first();
+        $this->userFamilies = $user->families()->get();
 
-        if (!$family) {
+        // Use session value if available, otherwise default to first family
+        $this->selectedFamilyId = session('selected_family_id', $this->userFamilies->first()?->id);
+
+        if (!$this->selectedFamilyId) {
             $this->chores = collect();
             $this->completedChores = collect();
             $this->bonusTasks = collect();
@@ -33,20 +38,57 @@ class UserChores extends Component
         }
 
         $this->isAdult = $user->families()
-            ->where('family_id', $family->id)
+            ->where('family_id', $this->selectedFamilyId)
             ->wherePivot('role', 'adult')
             ->exists();
 
-        $this->familyUsers = $family->members()->get();
+        $family = $user->families()->where('family_id', $this->selectedFamilyId)->first();
 
-        $this->childrenIds = $family->members()
-            ->wherePivot('role', 'child')
-            ->pluck('users.id')
-            ->toArray();
+        if ($family) {
+            $this->familyUsers = $family->members()->get();
+            $this->childrenIds = $family->members()
+                ->wherePivot('role', 'child')
+                ->pluck('users.id')
+                ->toArray();
+        } else {
+            $this->familyUsers = [];
+            $this->childrenIds = [];
+        }
 
         $this->loadChores();
-        $this->loadPointsAndCompletions($family->id, $user->id);
-        $this->loadBonusTasks($family->id);
+        $this->loadPointsAndCompletions($this->selectedFamilyId, $user->id);
+        $this->loadBonusTasks();
+    }
+
+    public function changeFamily($familyId)
+    {
+        $this->selectedFamilyId = $familyId;
+
+        // Save selection to session for persistence across refreshes
+        session(['selected_family_id' => $familyId]);
+
+        $user = Auth::user();
+        $this->isAdult = $user->families()
+            ->where('family_id', $this->selectedFamilyId)
+            ->wherePivot('role', 'adult')
+            ->exists();
+
+        $family = $user->families()->where('family_id', $this->selectedFamilyId)->first();
+
+        if ($family) {
+            $this->familyUsers = $family->members()->get();
+            $this->childrenIds = $family->members()
+                ->wherePivot('role', 'child')
+                ->pluck('users.id')
+                ->toArray();
+        } else {
+            $this->familyUsers = [];
+            $this->childrenIds = [];
+        }
+
+        $this->loadChores();
+        $this->loadPointsAndCompletions($this->selectedFamilyId, $user->id);
+        $this->loadBonusTasks();
     }
 
     public function updatedFilter()
@@ -57,7 +99,6 @@ class UserChores extends Component
     public function loadChores()
     {
         $user = Auth::user();
-        $family = $user->families()->first();
 
         $completedChoreIds = DB::table('task_user')
             ->where('user_id', $user->id)
@@ -67,25 +108,26 @@ class UserChores extends Component
 
         if ($this->isAdult) {
             if ($this->filter === 'assigned_to_me') {
-                $query = Chores::where('family_id', $family->id)
+                $query = Chores::where('family_id', $this->selectedFamilyId)
                     ->whereHas('users', fn($q) => $q->where('users.id', $user->id));
             } elseif ($this->filter === 'assigned_to_children') {
-                $query = Chores::where('family_id', $family->id)
+                $query = Chores::where('family_id', $this->selectedFamilyId)
                     ->whereHas('users', fn($q) => $q->whereIn('users.id', $this->childrenIds))
                     ->whereDoesntHave('users', fn($q) =>
                         $q->whereIn('users.id', $this->childrenIds)
                           ->wherePivot('confirmed', true)
                     );
             } else {
-                $query = Chores::where('family_id', $family->id);
+                $query = Chores::where('family_id', $this->selectedFamilyId);
             }
 
             $this->chores = $query->whereNotIn('id', $completedChoreIds)
                 ->with('users')
                 ->get();
         } else {
-            $this->chores = $user->chores()
-                ->whereNotIn('tasks.id', $completedChoreIds)
+            $this->chores = Chores::where('family_id', $this->selectedFamilyId)
+                ->whereHas('users', fn($q) => $q->where('users.id', $user->id))
+                ->whereNotIn('id', $completedChoreIds)
                 ->with('users')
                 ->get();
         }
@@ -108,7 +150,7 @@ class UserChores extends Component
                 ->where('task_user.user_id', $user->id)
                 ->where('task_user.confirmed', true)
                 ->orderByDesc('task_user.updated_at')
-                ->limit(4)
+                ->limit(6)
                 ->get(['tasks.name', 'tasks.points']);
         } else {
             $this->pendingConfirmations = DB::table('task_user')
@@ -123,62 +165,77 @@ class UserChores extends Component
     }
 
     public function loadBonusTasks()
-{
-    $user = Auth::user();
-    $family = $user->families()->first();
+    {
+        $user = Auth::user();
 
-    if (!$family) {
-        $this->bonusTasks = [];
-        return;
+        if (!$this->selectedFamilyId) {
+            $this->bonusTasks = [];
+            return;
+        }
+
+        $this->bonusTasks = Chores::where('family_id', $this->selectedFamilyId)
+            ->whereDoesntHave('users')
+            ->get();
     }
-
-    // Fetch tasks in the family that have no users assigned yet
-    $this->bonusTasks = Chores::where('family_id', $family->id)
-        ->whereDoesntHave('users')
-        ->get();
-}
 
     public function claimBonusTask($taskId)
     {
         $user = Auth::user();
         $task = Chores::find($taskId);
 
-    if (!$task) {
-        session()->flash('error', 'Task not found.');
-        return;
-    }
+        if (!$task) {
+            session()->flash('error', 'Task not found.');
+            return;
+        }
 
-    // Don't allow claiming if already claimed
-    if ($task->users()->exists()) {
-        session()->flash('error', 'This task has already been claimed.');
-        return;
-    }
+        if ($task->users()->exists()) {
+            session()->flash('error', 'This task has already been claimed.');
+            return;
+        }
 
-    // Assign the current user
         $task->users()->attach($user->id, [
             'performed' => null,
             'confirmed' => false,
             'assigned_by' => $user->id,
             'created_at' => now(),
             'updated_at' => now(),
-    ]);
+        ]);
 
         session()->flash('message', 'Bonus task claimed!');
         $this->loadChores();
-        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
+        $this->loadPointsAndCompletions($this->selectedFamilyId, $user->id);
         $this->loadBonusTasks();
     }
 
     public function markAsDone($choreId)
     {
         $user = Auth::user();
-        $user->chores()->updateExistingPivot($choreId, [
-            'performed' => now(),
-            'confirmed' => false,
-        ]);
+        
+        // If adult, auto-confirm
+        if ($this->isAdult) {
+            $user->chores()->updateExistingPivot($choreId, [
+                'performed' => now(),
+                'confirmed' => true,
+            ]);
+
+            // Add points directly for adults
+            $task = Chores::find($choreId);
+            if ($task) {
+                DB::table('family_user')
+                    ->where('family_id', $this->selectedFamilyId)
+                    ->where('user_id', $user->id)
+                    ->increment('points', $task->points);
+            }
+        } else {
+            // For children: needs confirmation
+            $user->chores()->updateExistingPivot($choreId, [
+                'performed' => now(),
+                'confirmed' => false,
+            ]);
+        }
 
         $this->loadChores();
-        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
+        $this->loadPointsAndCompletions($this->selectedFamilyId, $user->id);
     }
 
     public function confirmCompletion($taskId, $userId)
@@ -195,19 +252,14 @@ class UserChores extends Component
         $task = Chores::find($taskId);
 
         if ($user && $task) {
-            $family = $user->families()->first();
-
-            if ($family) {
-                DB::table('family_user')
-                    ->where('family_id', $family->id)
-                    ->where('user_id', $userId)
-                    ->increment('points', $task->points);
-            }
+            DB::table('family_user')
+                ->where('family_id', $this->selectedFamilyId)
+                ->where('user_id', $userId)
+                ->increment('points', $task->points);
         }
 
-
         $this->loadChores();
-        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
+        $this->loadPointsAndCompletions($this->selectedFamilyId, $user->id);
     }
 
     public function deleteChore($id)
@@ -222,7 +274,6 @@ class UserChores extends Component
         session()->flash('message', 'Chore deleted.');
     }
 
-
     public function render()
     {
         return view('livewire.user-chores', [
@@ -233,6 +284,8 @@ class UserChores extends Component
             'totalPoints' => $this->totalPoints,
             'filter' => $this->filter,
             'bonusTasks' => $this->bonusTasks,
+            'userFamilies' => $this->userFamilies,
+            'selectedFamilyId' => $this->selectedFamilyId,
         ]);
     }
 }
