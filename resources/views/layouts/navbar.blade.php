@@ -7,11 +7,8 @@
         <a href="{{ url('/calendar') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Calendar
         </a>
-        <a href="{{ url('/chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Add Chores
-        </a>
         <a href="{{ route('user-chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Your Chores
+            Chores
         </a>
         <a href="{{ url('/rewards') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Rewards
