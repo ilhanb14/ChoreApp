@@ -83,7 +83,7 @@
 
     <div class="bg-gray-100 p-4 rounded-xl shadow flex-grow overflow-y-auto max-h-[600px]">
       @if(!$isAdult)
-        <h3 class="text-xl font-semibold mb-4">Last 6 Completed Chores</h3>
+        <h3 class="text-xl font-semibold mb-4">Recently Completed Chores</h3>
         <ul class="space-y-3 mb-6">
           @forelse ($completedChores as $done)
             <li class="p-3 bg-white rounded-xl shadow flex justify-between items-center">

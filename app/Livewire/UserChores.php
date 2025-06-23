@@ -45,7 +45,7 @@ class UserChores extends Component
             ->toArray();
 
         $this->loadChores();
-        $this->loadPointsAndCompletions();
+        $this->loadPointsAndCompletions($family->id, $user->id);
         $this->loadBonusTasks($family->id);
     }
 
@@ -91,15 +91,16 @@ class UserChores extends Component
         }
     }
 
-    public function loadPointsAndCompletions()
+    public function loadPointsAndCompletions(int $familyId, int $userId)
     {
         $user = Auth::user();
 
-        $this->totalPoints = DB::table('task_user')
-            ->join('tasks', 'task_user.task_id', '=', 'tasks.id')
-            ->where('task_user.user_id', $user->id)
-            ->where('task_user.confirmed', true)
-            ->sum('tasks.points');
+        $pointsRecord = DB::table('family_user')
+            ->where('family_id', $familyId)
+            ->where('user_id', $userId)
+            ->first(['points']);
+
+        $this->totalPoints = $pointsRecord ? $pointsRecord->points : 0;
 
         if (!$this->isAdult) {
             $this->completedChores = DB::table('task_user')
@@ -163,9 +164,9 @@ class UserChores extends Component
     ]);
 
         session()->flash('message', 'Bonus task claimed!');
-        $this->loadChores(); // refresh view
-        $this->loadPointsAndCompletions(); // refresh sidebar
-        $this->loadBonusTasks(); // refresh bonus tasks    
+        $this->loadChores();
+        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
+        $this->loadBonusTasks();
     }
 
     public function markAsDone($choreId)
@@ -177,7 +178,7 @@ class UserChores extends Component
         ]);
 
         $this->loadChores();
-        $this->loadPointsAndCompletions();
+        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
     }
 
     public function confirmCompletion($taskId, $userId)
@@ -190,8 +191,23 @@ class UserChores extends Component
                 'updated_at' => now(),
             ]);
 
+        $user = Auth::user();
+        $task = Chores::find($taskId);
+
+        if ($user && $task) {
+            $family = $user->families()->first();
+
+            if ($family) {
+                DB::table('family_user')
+                    ->where('family_id', $family->id)
+                    ->where('user_id', $userId)
+                    ->increment('points', $task->points);
+            }
+        }
+
+
         $this->loadChores();
-        $this->loadPointsAndCompletions();
+        $this->loadPointsAndCompletions($user->families()->first()->id, $user->id);
     }
 
     public function deleteChore($id)
