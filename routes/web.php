@@ -11,8 +11,19 @@ use App\Livewire\UserChores;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\InviteController;
 use App\Livewire\TasksCalendar;
+use App\Livewire\UserProfile;
 
 Route::get('/', function () {
+    $user = auth()->user();
+    if ($user) {
+        $recommendedChore = $user->chores()
+            ->wherePivotNull('performed')
+            ->orderBy('deadline')
+            ->first();
+
+        return view('welcome', ['recommendedChore' => $recommendedChore]);
+    }
+
     return view('welcome');
 });
 
@@ -26,16 +37,19 @@ Route::middleware(['auth'])->group(function () {
     // Family routes
     Route::post('/families', [FamilyController::class, 'create'])->name('families.create');
     Route::post('/families/{family}/invites', [FamilyController::class, 'sendInvite'])->name('families.invites.send');
+
+    // Profile routes
+    Route::get('/profile', UserProfile::class)
+        ->name('profile');
     
     // Invitation routes
-    Route::get('/invites', [InviteController::class, 'index'])->name('invites.index');
     Route::post('/invites/{invite}/accept', [InviteController::class, 'accept'])->name('invite.accept');
     Route::post('/invites/{invite}/decline', [InviteController::class, 'decline'])->name('invite.decline');
 
     // Chore routes
     Route::get('/create-chore', CreateChore::class)
         ->name('create-chore');
-    Route::get('/chores', ChoreList::class)
+    Route::get('/chores', CreateChore::class)
         ->name('chores');    
     Route::get('/chores/edit/{chore}', EditChore::class)
         ->name('edit-chore');

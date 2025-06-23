@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\User;
+use App\Models\FamilyUser;
 
 class Family extends Model
 {
@@ -25,14 +26,9 @@ class Family extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-            ->withPivot(['role'])
+            ->withPivot(['role', 'points'])
             ->withTimestamps()
-            ->using(function ($model) {
-                $model->casts = [
-                    'role' => FamilyRole::class
-                ];
-                return $model;
-            });
+            ->using(FamilyUser::class);
     }
 
     public function adults()

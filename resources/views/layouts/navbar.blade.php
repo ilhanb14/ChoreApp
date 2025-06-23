@@ -8,7 +8,7 @@
             Calendar
         </a>
         <a href="{{ url('/chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Chores
+            Add Chores
         </a>
         <a href="{{ route('user-chores') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Your Chores
@@ -16,8 +16,8 @@
         <a href="{{ url('/rewards') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
             Rewards
         </a>
-        <a href="{{ url('/invites') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
-            Invites
+        <a href="{{ url('/profile') }}" class="text-sm text-apple-green hover:text-tangelo hover:underline transition-colors">
+            User
         </a>
 
         <form method="POST" action="{{ route('logout') }}">

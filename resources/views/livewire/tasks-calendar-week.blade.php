@@ -1,4 +1,3 @@
-{{-- Custom Week View: resources/views/livewire/tasks-calendar-week.blade.php --}}
 <div>
     {{-- Navigation --}}
     @include('vendor.livewire-calendar.navigation')

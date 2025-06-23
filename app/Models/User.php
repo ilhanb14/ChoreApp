@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Family;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use App\Models\FamilyUser;
 
 class User extends Authenticatable
 {
@@ -50,8 +53,9 @@ class User extends Authenticatable
     public function families()
     {
         return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
-                ->withPivot(['role', 'points'])
-                ->withTimeStamps();
+            ->withPivot(['role', 'points'])
+            ->withTimestamps()
+            ->using(FamilyUser::class);
     }
 
     public function invites()
@@ -65,5 +69,18 @@ class User extends Authenticatable
             ->where('family_id', $family->id)
             ->wherePivot('role', 'parent')
             ->exists();
+    }
+
+    // Only verified users on our domain can access filament
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return str_ends_with($this->email, '@chorebusters.be') && $this->hasVerifiedEmail();
+    }
+
+    public function chores()
+    {
+        return $this->belongsToMany(Chores::class, 'task_user', 'user_id', 'task_id')
+            ->withPivot(['assigned_by', 'performed', 'confirmed', 'comment'])
+            ->withTimestamps();
     }
 }
