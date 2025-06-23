@@ -25,7 +25,7 @@ class Chores extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id')
-            ->withPivot(['performed', 'comment', 'confirmed'])
+            ->withPivot(['performed', 'comment', 'confirmed', 'assigned_by'])
             ->withTimestamps();
     }
 
