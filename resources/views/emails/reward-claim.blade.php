@@ -19,6 +19,6 @@
 </p>
 
 <div class="button-container">
-    <a href="{{ url('/') }}" class="button">Go to our website</a>
+    <a href="{{ url('/rewards') }}" class="button">Go to your rewards</a>
 </div>
 @endsection

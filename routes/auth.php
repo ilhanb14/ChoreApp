@@ -14,6 +14,3 @@ Route::post('/logout', function () {
     request()->session()->regenerateToken();
     return redirect('/login');
 })->name('logout');
-
-Route::post('logout', Logout::class)
-    ->name('logout');
