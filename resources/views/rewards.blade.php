@@ -70,7 +70,7 @@
                 </button>
                 </form>
 
-                @if($familyRole == FamilyRole::Adult->value)
+                @if($familyRole == FamilyRole::Adult)
                 <form method="POST" action="{{ route('remove-reward') }}">
                 @csrf
                 <input type="hidden" name="reward_id" value="{{ $reward->id }}">
@@ -83,7 +83,7 @@
     @endforeach
     </div>
 
-    @if ($familyRole == FamilyRole::Adult->value)
+    @if ($familyRole == FamilyRole::Adult)
     <h1 class='text-xl font-bold mb-2 text-selective-yellow'> Add New Reward </h1>
     @livewire('create-reward')
     @endif
