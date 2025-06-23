@@ -27,11 +27,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@chorebusters.be',
-        ]);
-
         $this->call([   // Needs to be called last because it uses Test User
             InvitesTableSeeder::class,
         ]);

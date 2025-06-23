@@ -60,6 +60,15 @@ class UsersTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+            [
+                'id' => 6,
+                'name' => 'admin',
+                'email' => 'admin@chorebusters.be',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ];
 
         DB::table('users')->insert($users);
