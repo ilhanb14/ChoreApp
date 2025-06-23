@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Family;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use App\Models\FamilyUser;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -53,8 +54,9 @@ class User extends Authenticatable implements FilamentUser
     public function families()
     {
         return $this->belongsToMany(Family::class, 'family_user', 'user_id', 'family_id')
-                ->withPivot(['role', 'points'])
-                ->withTimeStamps();
+            ->withPivot(['role', 'points'])
+            ->withTimestamps()
+            ->using(FamilyUser::class);
     }
 
     public function invites()
