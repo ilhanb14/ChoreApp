@@ -13,8 +13,8 @@
 
     @if($isAdult)
       <div class="mb-4 flex items-center space-x-4">
-        <button wire:click="$set('filter', 'assigned_to_me')" class="px-4 py-2 rounded shadow font-semibold transition {{ $filter === 'assigned_to_me' ? 'bg-apple-green-800 text-white' : 'bg-gray-200 text-gray-700' }}">Assigned to Me</button>
-        <button wire:click="$set('filter', 'assigned_to_children')" class="px-4 py-2 rounded shadow font-semibold transition {{ $filter === 'assigned_to_children' ? 'bg-apple-green-800 text-white' : 'bg-gray-200 text-gray-700' }}">Assigned to Children</button>
+        <button wire:click="$set('filter', 'assigned_to_me')" class="px-4 py-2 rounded shadow font-semibold transition {{ $filter === 'assigned_to_me' ? 'bg-apple-green text-white' : 'bg-gray-200 hover:bg-apple-green-800 text-gray-700' }}">Assigned to Me</button>
+        <button wire:click="$set('filter', 'assigned_to_children')" class="px-4 py-2 rounded shadow font-semibold transition {{ $filter === 'assigned_to_children' ? 'bg-apple-green text-white' : 'bg-gray-200 hover:bg-apple-green-800 text-gray-700' }}">Assigned to Children</button>
       </div>
     @endif
 
@@ -44,12 +44,12 @@
           @if($isAdult)
             <div class="flex justify-between mt-4 items-center">
               <div class="flex space-x-2">
-                <a href="{{ route('edit-chore', $chore->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700">Edit</a>
-                <button wire:click="deleteChore({{ $chore->id }})" wire:confirm="Are you sure you want to delete this chore?" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                <a href="{{ route('edit-chore', $chore->id) }}" class="px-4 py-2 bg-selective-yellow text-white rounded hover:bg-selective-yellow-400">Edit</a>
+                <button wire:click="deleteChore({{ $chore->id }})" wire:confirm="Are you sure you want to delete this chore?" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-800">Delete</button>
               </div>
 
               @if($pivot && !$pivot->performed)
-                <button wire:click="markAsDone({{ $chore->id }})" class="px-4 py-2 bg-apple-green-800 text-white rounded hover:bg-apple-green-900">
+                <button wire:click="markAsDone({{ $chore->id }})" class="px-4 py-2  bg-apple-green text-white rounded hover:bg-apple-green-400">
                   Mark as Done
                 </button>
               @elseif($pivot && $pivot->performed && !$pivot->confirmed)
@@ -60,13 +60,13 @@
             </div>
           @else
             @if(!$pivot || !$pivot->performed)
-              <button wire:click="markAsDone({{ $chore->id }})" class="mt-3 px-4 py-2 bg-apple-green-800 text-white rounded hover:bg-apple-green-900">
+              <button wire:click="markAsDone({{ $chore->id }})" class="mt-3 px-4 py-2 bg-apple-green text-white rounded hover:bg-apple-green-400">
                 Mark as Done
               </button>
             @elseif($pivot && $pivot->performed && !$pivot->confirmed)
-              <p class="mt-2 text-yellow-600 font-semibold">Waiting for adult confirmation...</p>
+              <p class="mt-2 text-selective-yellow font-semibold">Waiting for adult confirmation...</p>
             @elseif($pivot && $pivot->confirmed)
-              <p class="mt-2 text-green-600 font-semibold">Task confirmed completed!</p>
+              <p class="mt-2 text-apple-green font-semibold">Task confirmed completed!</p>
             @endif
           @endif
         </li>
@@ -80,6 +80,12 @@
   <div class="basis-[40%] min-w-[300px] bg-white rounded-xl shadow p-6 flex flex-col">
     <h2 class="text-2xl font-bold mb-4">Hello, {{ auth()->user()->name }}</h2>
     <p class="mb-4">Total points earned: <span class="font-semibold">{{ $totalPoints }}</span></p>
+
+        @if($isAdult)
+      <div class="flex justify-end mb-6">
+        <a href="{{ url('/chores') }}" class="inline-block px-5 py-2 bg-apple-green text-white text-sm font-medium rounded-md shadow-sm hover:bg-tangelo transition-all duration-200">+ Create Chore</a>
+      </div>
+    @endif
 
     <div class="bg-gray-100 p-4 rounded-xl shadow flex-grow overflow-y-auto max-h-[600px]">
       @if(!$isAdult)
@@ -104,7 +110,7 @@
                   <span>{{ $bonus->name }}</span>
                   <span class="ml-2 text-sm text-gray-600">(+{{ $bonus->points }} pts)</span>
                 </div>
-                <button wire:click="claimBonusTask({{ $bonus->id }})" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                <button wire:click="claimBonusTask({{ $bonus->id }})" class="px-3 py-1 bg-picton-blue text-white rounded hover:bg-picton-blue-400">
                   Claim
                 </button>
               </li>
@@ -122,7 +128,7 @@
                         <span class="font-semibold">{{ $pending->user_name }}</span> completed:
                         <div class=" font-semibold text-sm">{{ $pending->task_name }}</div>
                     </div>
-                    <button wire:click="confirmCompletion({{ $pending->task_id }}, {{ $pending->user_id }})" class="px-3 py-1 bg-apple-green-800 text-white rounded hover:bg-apple-green-900">Confirm</button>
+                    <button wire:click="confirmCompletion({{ $pending->task_id }}, {{ $pending->user_id }})" class="px-3 py-1 bg-apple-green text-white rounded hover:bg-apple-green-400">Confirm</button>
                 </li>
             @endforeach
           </ul>
