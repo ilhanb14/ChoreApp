@@ -13,6 +13,6 @@
     Go to our website now to accept or decline this invitation!
 </div>
 <div class="button-container">
-    <a href="{{ url('/') }}" class="button">Go to our website</a>
+    <a href="{{ url('/profile') }}" class="button">Go to your user page</a>
 </div>
 @endsection
