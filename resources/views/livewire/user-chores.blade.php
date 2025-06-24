@@ -73,9 +73,11 @@
             </div>
           @else
             @if(!$pivot || !$pivot->performed)
-              <button wire:click="markAsDone({{ $chore->id }})" class="mt-3 px-4 py-2 bg-apple-green text-white rounded hover:bg-apple-green-400">
-                Mark as Done
-              </button>
+          <div class="flex justify-end mt-3">
+            <button wire:click="markAsDone({{ $chore->id }})" class="px-4 py-2  bg-apple-green text-white rounded hover:bg-apple-green-400">
+              Mark as Done
+            </button>
+          </div>
             @elseif($pivot && $pivot->performed && !$pivot->confirmed)
               <p class="mt-2 text-selective-yellow font-semibold">Waiting for adult confirmation...</p>
             @elseif($pivot && $pivot->confirmed)
