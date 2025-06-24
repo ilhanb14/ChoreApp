@@ -25,6 +25,12 @@ class FamiliesTableSeeder extends Seeder
                 'name' => 'Smith Family',
                 'created_at' => now(),
                 'updated_at' => now()
+            ],
+            [
+                'id' => 3,
+                'name' => 'Segers Family',
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ];
 

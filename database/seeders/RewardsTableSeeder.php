@@ -52,6 +52,15 @@ class RewardsTableSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
+            [
+                'id' => 5,
+                'reward' => 'McDonalds',
+                'points' => 200,
+                'family_id' => 3,
+                'claim_type' => 'per_user',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
         ];
 
         $reward_user = [

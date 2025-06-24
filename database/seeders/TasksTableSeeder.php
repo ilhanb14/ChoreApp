@@ -86,6 +86,20 @@ class TasksTableSeeder extends Seeder
                 'created_by' => 1,
                 'description' => 'Wash the dishes',
             ],
+            [
+                'id' => 6,
+                'name' => 'Homework',
+                'family_id' => 1,
+                'points' => 10,
+                'recurring' => true,
+                'frequency' => 'daily',
+                'start_date' => $now,
+                'deadline' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'created_by' => 1,
+                'description' => 'Do your homework',
+            ],
         ];
 
         $task_user = [
