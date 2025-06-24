@@ -18,7 +18,8 @@ class Index extends Component
     public $email = '';
     public $family_id = '';
     public $role = FamilyRole::Child->value;
-    public $showInviteForm = false;
+    public $familyName = '';
+
 
     public function mount()
     {
@@ -82,10 +83,33 @@ class Index extends Component
         Mail::to($invitee->email)->send(new FamilyInvitationEmail(Auth::user(), $family));
 
         // Reset form
-        $this->reset(['email', 'family_id', 'role', 'showInviteForm']);
+        $this->reset(['email', 'family_id', 'role']);
         $this->loadInvites();
         
         session()->flash('success', 'Invitation sent successfully!');
+    }
+
+    public function createFamily()
+    {
+        $this->validate([
+            'familyName' => 'required|string|max:255',
+        ]);
+
+        $family = Family::create([
+            'name' => $this->familyName,
+        ]);
+
+        // Add the creator as an adult member
+        $family->members()->attach(Auth::id(), [
+            'role' => FamilyRole::Adult->value,
+            'points' => 0
+        ]);
+
+        // Reset form and reload data
+        $this->reset(['familyName']);
+        $this->loadFamiliesAdult();
+        
+        session()->flash('success', 'Family ' . $family->name . ' created successfully!');
     }
 
     public function accept($inviteId)
