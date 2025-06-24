@@ -23,6 +23,40 @@
                 </div>
             @endif
 
+            <!-- Create Family Form -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20 mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800">Create New Family</h2>
+
+                </div>
+                <div>
+                    <form wire:submit.prevent="createFamily" class="space-y-4">
+                        <!-- Family Name Input -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Family Name</label>
+                            <input 
+                                wire:model="familyName" 
+                                type="text" 
+                                placeholder="Enter family name"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-picton-blue focus:outline-none bg-white/80 transition-all duration-300"
+                            >
+                            @error('familyName') 
+                                <span class="text-red-500 text-sm">{{ $message }}</span> 
+                            @enderror
+                        </div>
+
+                        <div class="pt-2">
+                            <button 
+                                type="submit" 
+                                class="w-full md:w-auto py-3 px-6 bg-gradient-to-r from-apple-green-600 to-apple-green-500 hover:from-apple-green-500 hover:to-apple-green-300 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl"
+                            >
+                                Create Family
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <!-- Invitation Form (Always Visible) -->
             <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 border border-white/20 mb-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Invite New Member</h2>
@@ -77,7 +111,7 @@
                     <div class="pt-2">
                         <button 
                             type="submit" 
-                            class="w-full md:w-auto py-3 px-6 bg-gradient-to-r from-tangelo to-tangelo-600 hover:from-tangelo-600 hover:to-tangelo-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl"
+                            class="w-full md:w-auto py-3 px-6 bg-gradient-to-r from-tangelo-600 to-tangelo-500 hover:from-tangelo-500 hover:to-tangelo-300 text-white font-semibold rounded-xl shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-xl"
                         >
                             Send Invitation
                         </button>
