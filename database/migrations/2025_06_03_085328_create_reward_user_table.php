@@ -15,10 +15,8 @@ return new class extends Migration
 
         Schema::create('reward_user', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('reward_id');
-            $table->foreign('reward_id')->references('id')->on('rewards');
-            $table->bigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('reward_id')->constrained('rewards');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
 

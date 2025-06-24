@@ -17,8 +17,7 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('family_id');
-            $table->foreign('family_id')->references('id')->on('families');
+            $table->foreignId('family_id')->constrained('families');
             $table->integer('points');
             $table->boolean('recurring')->default(0);
             $table->enum('frequency', array_column(TaskFrequency::cases(), 'value'))->nullable();

@@ -6,6 +6,8 @@
         </div>
 
         <div class="max-w-md mx-auto p-4 bg-white shadow rounded-xl ">
+
+
             @if (session()->has('message'))
                 <div class="mb-4 text-green-600">
                     {{ session('message') }}
@@ -27,26 +29,32 @@
                     @error('title') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                {{-- Description --}}
-                <div class="mb-4">
-                    <label class="block">Description</label>
-                    <textarea 
-                        wire:model="description"
-                        class="w-full border-2 border-gray-200 rounded-xl p-2"
-                        placeholder="Enter chore description"
-                        rows="4"
-                    ></textarea>
-                    @error('description') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            {{-- Family Switcher --}}
+            @if(count($userFamilies) > 0)
+                <div class="mb-6">
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Select Family</label>
+                    <select 
+                        wire:change="changeFamily($event.target.value)"
+                        class="w-full px-4 py-2 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-tangelo focus:border-tangelo transition-all duration-300"
+                    >
+                        @foreach($userFamilies as $family)
+                            <option value="{{ $family->id }}" {{ $selectedFamilyId == $family->id ? 'selected' : '' }}>
+                                {{ $family->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
+            @endif
+
 
                 {{-- Assigned To --}}
                 <div class="mb-4">
                     <label class="block">Assigned To</label>
                     <select wire:model="assigned_to" class="w-full border-2 border-gray-200 rounded-xl p-2">
-                        <option value="">Select a family member</option>
-                    @foreach ($familyUsers as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
+                        <option value="">Bonus task</option>
+                        @foreach ($familyUsers as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
                     </select>
                     @error('assigned_to') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>

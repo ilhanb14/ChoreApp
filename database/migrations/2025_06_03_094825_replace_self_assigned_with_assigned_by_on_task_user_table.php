@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::table('task_user', function (Blueprint $table) {
             $table->dropColumn('self_assigned');
-            $table->bigInteger('assigned_by');
-            $table->foreign('assigned_by')->references('id')->on('users');
+            $table->foreignId('assigned_by')->constrained('users');
         });
     }
 

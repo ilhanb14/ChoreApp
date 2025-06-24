@@ -16,11 +16,9 @@ return new class extends Migration
 
         Schema::create('invites', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('inviter_id');
-            $table->foreign('inviter_id')->references('id')->on('users');
-            $table->bigInteger('invited_id');
-            $table->foreign('invited_id')->references('id')->on('users');
-            $table->bigInteger('family_id');
+            $table->foreignId('inviter_id')->constrained('users');
+            $table->foreignId('invited_id')->constrained('users');
+            $table->foreignId('family_id')->constrained('families');
             $table->enum('status', array_column(InviteStatus::cases(), 'value'))->default(InviteStatus::Pending->value);
             $table->timestamps();
         });

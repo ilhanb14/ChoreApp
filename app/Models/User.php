@@ -11,7 +11,7 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use App\Models\FamilyUser;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -25,7 +25,6 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-        'email_verified_at',
     ];
 
     /**
